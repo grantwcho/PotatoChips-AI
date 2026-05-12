@@ -1,0 +1,22 @@
+<svg width="320" height="224" viewBox="0 0 320 224" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="320" height="224" rx="18" fill="#FFF0F3"/>
+  <rect x="16" y="16" width="288" height="192" rx="14" fill="url(#bg)"/>
+  <circle cx="76" cy="80" r="28" fill="#FFF4F6" fill-opacity="0.86"/>
+  <path d="M68 80H84" stroke="#F34F7A" stroke-width="4.5" stroke-linecap="round"/>
+  <path d="M76 72V88" stroke="#F34F7A" stroke-width="4.5" stroke-linecap="round"/>
+  <rect x="132" y="82" width="26" height="62" rx="8" fill="#FFD8E1"/>
+  <rect x="168" y="68" width="26" height="76" rx="8" fill="#FFBCCB"/>
+  <rect x="204" y="96" width="26" height="48" rx="8" fill="#FFD8E1"/>
+  <rect x="240" y="58" width="26" height="86" rx="8" fill="#FF9EB6"/>
+  <path d="M130 154H271" stroke="#FFE8EE" stroke-width="3" stroke-linecap="round"/>
+  <rect x="36" y="165" width="118" height="13" rx="6.5" fill="#2F0A15" fill-opacity="0.16"/>
+  <rect x="36" y="184" width="174" height="10" rx="5" fill="#2F0A15" fill-opacity="0.1"/>
+  <text x="36" y="50" fill="#FFF8FA" font-size="21" font-family="Arial, sans-serif" font-weight="700">Policy</text>
+  <text x="36" y="72" fill="#FFF8FA" font-size="12" font-family="Arial, sans-serif" opacity="0.86">Crowd odds tighten</text>
+  <defs>
+    <linearGradient id="bg" x1="40" y1="24" x2="278" y2="204" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#A71C45"/>
+      <stop offset="1" stop-color="#6F0F2E"/>
+    </linearGradient>
+  </defs>
+</svg>

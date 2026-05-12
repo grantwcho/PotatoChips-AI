@@ -1,0 +1,1 @@
+"""Silent example submission."""

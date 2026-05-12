@@ -1,0 +1,1 @@
+"""Static introspection example submission."""

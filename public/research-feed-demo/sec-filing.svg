@@ -1,0 +1,23 @@
+<svg width="320" height="224" viewBox="0 0 320 224" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="320" height="224" rx="18" fill="#ECFBF4"/>
+  <rect x="16" y="16" width="288" height="192" rx="14" fill="url(#bg)"/>
+  <rect x="62" y="42" width="132" height="144" rx="14" fill="#F7FFF9" fill-opacity="0.96"/>
+  <path d="M169 42V73C169 78.5228 173.477 83 179 83H194" fill="#D4F8E2"/>
+  <path d="M169 42V73C169 78.5228 173.477 83 179 83H194" stroke="#A7E8C1" stroke-width="2"/>
+  <rect x="84" y="98" width="88" height="9" rx="4.5" fill="#D5F6E1"/>
+  <rect x="84" y="117" width="72" height="9" rx="4.5" fill="#D5F6E1"/>
+  <rect x="84" y="136" width="94" height="9" rx="4.5" fill="#D5F6E1"/>
+  <rect x="214" y="88" width="54" height="66" rx="16" fill="#A7F0C5" fill-opacity="0.28"/>
+  <path d="M225 139L238 126L248 134L260 116" stroke="#C7FFE0" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="260" cy="116" r="6" fill="#C7FFE0"/>
+  <rect x="36" y="165" width="110" height="13" rx="6.5" fill="#082016" fill-opacity="0.16"/>
+  <rect x="36" y="184" width="162" height="10" rx="5" fill="#082016" fill-opacity="0.1"/>
+  <text x="36" y="50" fill="#F6FFF9" font-size="21" font-family="Arial, sans-serif" font-weight="700">SEC Filing</text>
+  <text x="36" y="72" fill="#F6FFF9" font-size="12" font-family="Arial, sans-serif" opacity="0.86">DAL 8-K catalyst stack</text>
+  <defs>
+    <linearGradient id="bg" x1="40" y1="24" x2="278" y2="204" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#16784E"/>
+      <stop offset="1" stop-color="#0D4F33"/>
+    </linearGradient>
+  </defs>
+</svg>

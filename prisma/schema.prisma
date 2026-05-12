@@ -1,0 +1,203 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma-sqlite"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id          String       @id @default(cuid())
+  email       String?      @unique
+  name        String?
+  githubId    String?      @unique
+  githubLogin String?
+  accessToken String?
+  submissions Submission[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@map("submission_users")
+}
+
+model EnvironmentSecret {
+  id               String    @id @default(cuid())
+  envVarName       String    @unique
+  encryptedValue   String
+  googleSecretName String?
+  syncState        String    @default("LOCAL_ONLY")
+  syncMessage      String?
+  lastSyncedAt     DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@index([updatedAt])
+  @@map("environment_secrets")
+}
+
+model Submission {
+  id                       String                    @id @default(cuid())
+  userId                   String
+  user                     User                      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  source                   SubmissionSource
+  githubRepoFullName       String?
+  githubCommitSha          String?
+  githubBranch             String?
+  uploadContentHash        String?
+  storagePath              String
+  agentName                String?
+  description              String
+  linkedinProfileUrl       String?
+  documentationPath        String?
+  parsedSubmissionSnapshot String?
+  publicationStatus        String                    @default("PENDING")
+  publicAgentSlug          String?                   @unique
+  publicAgentSnapshot      String?
+  reviewedAt               DateTime?
+  status                   SubmissionStatus          @default(CREATED)
+  processingStage          SubmissionProcessingStage?
+  processingStageMessage   String?
+  processingError          String?
+  card                     InterpretationCard?
+  adapter                  Adapter?
+  attestation              Attestation?
+  chatSessions             SubmissionChatSession[]
+  createdAt                DateTime                  @default(now())
+  updatedAt                DateTime                  @updatedAt
+
+  @@index([userId, createdAt])
+  @@index([status, createdAt])
+  @@index([source, createdAt])
+  @@index([publicationStatus, updatedAt])
+  @@map("submissions")
+}
+
+model InterpretationCard {
+  id                     String              @id @default(cuid())
+  submissionId           String              @unique
+  submission             Submission          @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  strategyClassification String
+  assetUniverse          String
+  timeframe              String
+  decisionCadence        String
+  capitalRangeMin        Float?
+  capitalRangeMax        Float?
+  claimedEdge            String
+  killSwitchBehavior     String
+  entryPoint             String
+  executionMode          ExecutionMode
+  riskEnvelope           String
+  dependencies           Dependency[]
+  aiHrNotes              String
+  originalSnapshot       String
+  generatedAt            DateTime            @default(now())
+  editedByUser           Boolean             @default(false)
+
+  @@map("interpretation_cards")
+}
+
+model Dependency {
+  id        String             @id @default(cuid())
+  cardId    String
+  card      InterpretationCard @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  type      DependencyType
+  name      String
+  details   String
+  sortOrder Int                @default(0)
+
+  @@index([cardId, sortOrder])
+  @@map("dependencies")
+}
+
+model Adapter {
+  id                String      @id @default(cuid())
+  submissionId      String      @unique
+  submission        Submission  @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  code              String
+  language          String      @default("python")
+  rationale         String
+  originalCode      String
+  originalRationale String
+  editedByUser      Boolean     @default(false)
+  generatedAt       DateTime    @default(now())
+
+  @@map("adapters")
+}
+
+model Attestation {
+  id              String      @id @default(cuid())
+  submissionId    String      @unique
+  submission      Submission  @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  signerName      String
+  signerEmail     String
+  attestationText String
+  agreedAt        DateTime    @default(now())
+  ipAddress       String?
+  userAgent       String?
+
+  @@map("attestations")
+}
+
+model SubmissionChatSession {
+  id           String                  @id @default(cuid())
+  submissionId String
+  submission   Submission              @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  surface      String                  @default("DASHBOARD")
+  title        String
+  messages     SubmissionChatMessage[]
+  createdAt    DateTime                @default(now())
+  updatedAt    DateTime                @updatedAt
+
+  @@index([submissionId, surface, updatedAt])
+  @@map("submission_chat_sessions")
+}
+
+model SubmissionChatMessage {
+  id        String                @id @default(cuid())
+  sessionId String
+  session   SubmissionChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  role      String
+  content   String
+  tone      String?
+  sortOrder Int
+  createdAt DateTime              @default(now())
+
+  @@index([sessionId, sortOrder])
+  @@map("submission_chat_messages")
+}
+
+enum SubmissionSource {
+  GITHUB
+  UPLOAD
+}
+
+enum SubmissionStatus {
+  CREATED
+  PROCESSING
+  READY_FOR_REVIEW
+  SIGNED
+  FAILED
+}
+
+enum SubmissionProcessingStage {
+  SOURCE_ACQUISITION
+  PARSING_FILES
+  GENERATING_INTERPRETATION
+  GENERATING_ADAPTER
+}
+
+enum ExecutionMode {
+  STREAMING
+  SCHEDULED
+  BACKTEST_ONLY
+  UNKNOWN
+}
+
+enum DependencyType {
+  LLM_API
+  DATA_API
+  MODEL_WEIGHTS
+  PLATFORM_TOOL
+  CUSTOM
+}

@@ -1,0 +1,1 @@
+"""Deterministic viability gate implementations."""

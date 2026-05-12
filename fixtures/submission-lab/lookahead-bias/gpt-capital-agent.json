@@ -1,0 +1,6 @@
+{
+  "runtime": "python",
+  "entrypoint": "main.py",
+  "declared_strategy_class": "LookaheadBiasStrategy",
+  "supports_snapshot_restore": true
+}

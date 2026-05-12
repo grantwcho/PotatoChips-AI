@@ -1,0 +1,19 @@
+<svg width="320" height="224" viewBox="0 0 320 224" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="320" height="224" rx="18" fill="#F6EFE7"/>
+  <rect x="16" y="16" width="288" height="192" rx="14" fill="url(#bg)"/>
+  <circle cx="78" cy="86" r="44" fill="#FFF6E9" fill-opacity="0.88"/>
+  <circle cx="234" cy="132" r="58" fill="#FFD9AA" fill-opacity="0.34"/>
+  <path d="M54 95C82 67 118 61 148 75C170 86 197 84 230 63" stroke="#A35A1F" stroke-width="5" stroke-linecap="round"/>
+  <path d="M97 142C128 118 166 115 206 129C222 134 240 132 260 121" stroke="#6E3B16" stroke-width="3.5" stroke-linecap="round" opacity="0.82"/>
+  <rect x="34" y="155" width="116" height="14" rx="7" fill="#2C170C" fill-opacity="0.14"/>
+  <rect x="34" y="176" width="168" height="10" rx="5" fill="#2C170C" fill-opacity="0.1"/>
+  <rect x="214" y="156" width="72" height="30" rx="15" fill="#2C170C" fill-opacity="0.1"/>
+  <text x="34" y="52" fill="#FFF8F1" font-size="21" font-family="Arial, sans-serif" font-weight="700">Desk Note</text>
+  <text x="34" y="74" fill="#FFF8F1" font-size="12" font-family="Arial, sans-serif" opacity="0.86">Overnight tariff risk brief</text>
+  <defs>
+    <linearGradient id="bg" x1="34" y1="18" x2="266" y2="212" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#A85A21"/>
+      <stop offset="1" stop-color="#5A2810"/>
+    </linearGradient>
+  </defs>
+</svg>

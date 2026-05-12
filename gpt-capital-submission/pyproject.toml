@@ -1,0 +1,76 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gpt-capital-submission"
+version = "0.1.0"
+description = "Pre-acceptance viability and packaging validator for Potato Chips AI submissions."
+readme = "contract/README.md"
+requires-python = ">=3.9"
+dependencies = [
+  "fastapi>=0.111,<1.0",
+  "httpx>=0.27,<1.0",
+  "pydantic>=2.7,<3.0",
+  "PyYAML>=6.0,<7.0",
+  "rich>=13.7,<14.0",
+  "uvicorn>=0.30,<1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "black>=24.4,<25.0",
+  "mypy>=1.10,<2.0",
+  "pytest>=8.2,<9.0",
+  "ruff>=0.5,<1.0",
+]
+
+[project.scripts]
+gptcap-validate = "validator.cli:main"
+
+[tool.setuptools]
+include-package-data = true
+packages = [
+  "contract",
+  "validator",
+  "validator.gates",
+  "validator.packaging",
+  "validator.replay",
+  "gptcap",
+]
+
+[tool.setuptools.package-dir]
+contract = "contract"
+validator = "validator"
+"validator.gates" = "validator/gates"
+"validator.packaging" = "validator/packaging"
+"validator.replay" = "validator/replay"
+gptcap = "sdk/python/gptcap"
+
+[tool.setuptools.package-data]
+contract = ["openapi.yaml", "README.md"]
+
+[tool.black]
+line-length = 88
+target-version = ["py39"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py39"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "N", "S", "RUF"]
+ignore = ["S101"]
+
+[tool.ruff.lint.per-file-ignores]
+"sdk/python/gptcap/server.py" = ["S104"]
+"validator/runtime.py" = ["S603", "S607"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.mypy]
+python_version = "3.9"
+strict = true
+warn_unused_configs = true
+packages = ["contract", "validator", "sdk", "tests"]

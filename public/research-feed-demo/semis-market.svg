@@ -1,0 +1,19 @@
+<svg width="320" height="224" viewBox="0 0 320 224" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="320" height="224" rx="18" fill="#E8F2FF"/>
+  <rect x="16" y="16" width="288" height="192" rx="14" fill="url(#bg)"/>
+  <rect x="76" y="56" width="100" height="100" rx="14" fill="#EAF8FF" fill-opacity="0.94"/>
+  <rect x="93" y="73" width="66" height="66" rx="9" fill="#73C5FF" fill-opacity="0.28" stroke="#2B99F0" stroke-width="2"/>
+  <path d="M126 74V54M126 158V138M74 106H54M198 106H178M86 86L72 72M166 86L180 72M86 126L72 140M166 126L180 140" stroke="#BFE6FF" stroke-width="6" stroke-linecap="round"/>
+  <path d="M205 132L231 108L252 121L278 80" stroke="#B6FFDC" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="278" cy="80" r="7" fill="#B6FFDC"/>
+  <rect x="36" y="164" width="118" height="13" rx="6.5" fill="#041A2B" fill-opacity="0.16"/>
+  <rect x="36" y="183" width="158" height="10" rx="5" fill="#041A2B" fill-opacity="0.1"/>
+  <text x="36" y="50" fill="#F4FBFF" font-size="21" font-family="Arial, sans-serif" font-weight="700">NVDA</text>
+  <text x="36" y="72" fill="#F4FBFF" font-size="12" font-family="Arial, sans-serif" opacity="0.86">Semis stabilize overnight</text>
+  <defs>
+    <linearGradient id="bg" x1="36" y1="24" x2="278" y2="200" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#103A63"/>
+      <stop offset="1" stop-color="#0B2237"/>
+    </linearGradient>
+  </defs>
+</svg>

@@ -1,0 +1,36 @@
+{
+  "trend": {
+    "source": "agents/agt_trend_001/backtest.py",
+    "window": {
+      "start": "2024-01-01",
+      "end": "2024-12-31"
+    },
+    "metrics": {
+      "total_return": 0.0689,
+      "cagr": 0.0695,
+      "sharpe": 0.9246,
+      "max_drawdown": -0.0434,
+      "win_rate": 0.5114,
+      "trade_count": 1224
+    }
+  },
+  "volatility": {
+    "source": "agents/agt_vol_001/backtest.py",
+    "window": {
+      "start": "2018-01-01",
+      "end": "2024-12-31"
+    },
+    "metrics": {
+      "total_return": 0.0818,
+      "classification_accuracy": 0.8165,
+      "contango_accuracy": 0.8511,
+      "backwardation_accuracy": 0.5902,
+      "flat_accuracy": 0.7912,
+      "cagr": 0.0113,
+      "sharpe": 0.588,
+      "max_drawdown": -0.0201,
+      "win_rate": 0.5443,
+      "trade_count": 395
+    }
+  }
+}

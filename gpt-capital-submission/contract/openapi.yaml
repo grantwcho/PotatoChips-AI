@@ -1,0 +1,707 @@
+openapi: 3.1.0
+info:
+  title: Potato Chips AI Submission Contract
+  version: 1.0.0
+  description: >
+    HTTP/JSON RPC contract for black-box autonomous trading agent submissions.
+servers:
+  - url: http://127.0.0.1:{port}
+    variables:
+      port:
+        default: "8080"
+paths:
+  /healthz:
+    get:
+      operationId: getHealthz
+      summary: Submission health check
+      responses:
+        "200":
+          description: Healthy submission
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+  /metadata:
+    get:
+      operationId: getMetadata
+      summary: Submission metadata
+      responses:
+        "200":
+          description: Submission metadata
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubmissionMetadata"
+  /snapshot:
+    post:
+      operationId: postSnapshot
+      summary: Serialize submission state
+      responses:
+        "200":
+          description: Serialized state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SnapshotResponse"
+  /restore:
+    post:
+      operationId: postRestore
+      summary: Restore submission state
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RestoreRequest"
+      responses:
+        "200":
+          description: Restore result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RestoreResponse"
+  /on_market_update:
+    post:
+      operationId: postOnMarketUpdate
+      summary: Consume market update batch and emit trade signals
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MarketUpdateRequest"
+      responses:
+        "200":
+          description: Trade signals produced from the market batch
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SignalBatchResponse"
+  /on_news:
+    post:
+      operationId: postOnNews
+      summary: Consume news event and emit trade signals
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewsEventRequest"
+      responses:
+        "200":
+          description: Trade signals produced from the news event
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SignalBatchResponse"
+  /propose_positions:
+    post:
+      operationId: postProposePositions
+      summary: Propose position changes for the current portfolio
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProposePositionsRequest"
+      responses:
+        "200":
+          description: Desired position deltas
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PositionProposalResponse"
+  /current_positioning:
+    get:
+      operationId: getCurrentPositioning
+      summary: Structured current strategy state for narration
+      responses:
+        "200":
+          description: Current positioning state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CurrentPositioning"
+  /explain_decision:
+    post:
+      operationId: postExplainDecision
+      summary: Explain a specific signal
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ExplainDecisionRequest"
+      responses:
+        "200":
+          description: Decision explanation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DecisionExplanationResponse"
+  /stress_response:
+    post:
+      operationId: postStressResponse
+      summary: Return positioning changes under a scenario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StressScenarioRequest"
+      responses:
+        "200":
+          description: Stress scenario response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StressResponse"
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      additionalProperties: false
+      required:
+        - status
+        - ready
+        - version
+      properties:
+        status:
+          type: string
+        ready:
+          type: boolean
+        version:
+          type: string
+    SubmissionMetadata:
+      type: object
+      additionalProperties: false
+      required:
+        - name
+        - version
+        - declared_strategy_class
+        - supports_news
+        - supports_stress_scenarios
+      properties:
+        name:
+          type: string
+        version:
+          type: string
+        declared_strategy_class:
+          type: string
+        author:
+          type: string
+        supports_news:
+          type: boolean
+        supports_stress_scenarios:
+          type: boolean
+        description:
+          type: string
+    SnapshotResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - snapshot_b64
+        - checksum_sha256
+      properties:
+        snapshot_b64:
+          type: string
+        checksum_sha256:
+          type: string
+    RestoreRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - snapshot_b64
+      properties:
+        snapshot_b64:
+          type: string
+    RestoreResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - restored
+        - checksum_sha256
+      properties:
+        restored:
+          type: boolean
+        checksum_sha256:
+          type: string
+    MarketTick:
+      type: object
+      additionalProperties: false
+      required:
+        - symbol
+        - last
+        - open
+        - high
+        - low
+        - volume
+        - vwap
+        - spread_bps
+        - sector
+        - features
+      properties:
+        symbol:
+          type: string
+        last:
+          type: number
+        open:
+          type: number
+        high:
+          type: number
+        low:
+          type: number
+        volume:
+          type: number
+        vwap:
+          type: number
+        spread_bps:
+          type: number
+        sector:
+          type: string
+        features:
+          type: object
+          additionalProperties:
+            type: number
+    MarketUpdateRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - batch_id
+        - timestamp
+        - ticks
+      properties:
+        batch_id:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        ticks:
+          type: array
+          items:
+            $ref: "#/components/schemas/MarketTick"
+    NewsEventRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - event_id
+        - timestamp
+        - headline
+        - summary
+        - symbols
+        - category
+        - relevance
+        - sentiment
+      properties:
+        event_id:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        headline:
+          type: string
+        summary:
+          type: string
+        symbols:
+          type: array
+          items:
+            type: string
+        category:
+          type: string
+          enum:
+            - macro
+            - earnings
+            - idiosyncratic
+            - liquidity
+            - policy
+            - other
+        relevance:
+          type: number
+          minimum: 0
+          maximum: 1
+        sentiment:
+          type: string
+          enum:
+            - positive
+            - negative
+            - neutral
+    TradeSignal:
+      type: object
+      additionalProperties: false
+      required:
+        - signal_id
+        - timestamp
+        - symbol
+        - intent
+        - strength
+        - confidence
+        - horizon_minutes
+        - thesis
+        - origin
+        - tags
+      properties:
+        signal_id:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        symbol:
+          type: string
+        intent:
+          type: string
+          enum:
+            - increase_long
+            - reduce_long
+            - increase_short
+            - reduce_short
+            - flatten
+            - hedge
+        strength:
+          type: number
+          minimum: 0
+          maximum: 1
+        confidence:
+          type: number
+          minimum: 0
+          maximum: 1
+        horizon_minutes:
+          type: integer
+          minimum: 1
+        thesis:
+          type: string
+        origin:
+          type: string
+          enum:
+            - market_update
+            - news
+            - portfolio
+        tags:
+          type: array
+          items:
+            type: string
+    SignalBatchResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - signals
+      properties:
+        signals:
+          type: array
+          items:
+            $ref: "#/components/schemas/TradeSignal"
+    Position:
+      type: object
+      additionalProperties: false
+      required:
+        - symbol
+        - quantity
+        - avg_price
+        - market_price
+        - side
+      properties:
+        symbol:
+          type: string
+        quantity:
+          type: number
+        avg_price:
+          type: number
+        market_price:
+          type: number
+        side:
+          type: string
+          enum:
+            - long
+            - short
+    PortfolioSnapshot:
+      type: object
+      additionalProperties: false
+      required:
+        - cash_usd
+        - gross_exposure_usd
+        - net_exposure_usd
+        - positions
+      properties:
+        cash_usd:
+          type: number
+        gross_exposure_usd:
+          type: number
+        net_exposure_usd:
+          type: number
+        positions:
+          type: array
+          items:
+            $ref: "#/components/schemas/Position"
+    RiskLimits:
+      type: object
+      additionalProperties: false
+      required:
+        - max_gross_exposure_usd
+        - max_single_name_exposure_usd
+        - max_turnover_bps
+      properties:
+        max_gross_exposure_usd:
+          type: number
+        max_single_name_exposure_usd:
+          type: number
+        max_turnover_bps:
+          type: number
+    ProposePositionsRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - timestamp
+        - portfolio
+        - risk_limits
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        portfolio:
+          $ref: "#/components/schemas/PortfolioSnapshot"
+        risk_limits:
+          $ref: "#/components/schemas/RiskLimits"
+    PositionProposal:
+      type: object
+      additionalProperties: false
+      required:
+        - proposal_id
+        - symbol
+        - target_delta_quantity
+        - reason
+        - linked_signal_ids
+      properties:
+        proposal_id:
+          type: string
+        symbol:
+          type: string
+        target_delta_quantity:
+          type: number
+        reason:
+          type: string
+        linked_signal_ids:
+          type: array
+          items:
+            type: string
+    PositionProposalResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - proposals
+      properties:
+        proposals:
+          type: array
+          items:
+            $ref: "#/components/schemas/PositionProposal"
+    FactorExposure:
+      type: object
+      additionalProperties: false
+      required:
+        - name
+        - weight
+        - direction
+        - evidence
+      properties:
+        name:
+          type: string
+        weight:
+          type: number
+          minimum: 0
+          maximum: 1
+        direction:
+          type: string
+          enum:
+            - pro
+            - con
+            - neutral
+        evidence:
+          type: string
+    CurrentPositioning:
+      type: object
+      additionalProperties: false
+      required:
+        - timestamp
+        - directional_bias
+        - conviction
+        - regime_view
+        - time_horizon
+        - liquidity_posture
+        - risk_budget_usage
+        - active_factors
+        - watchlist
+        - key_risks
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        directional_bias:
+          type: string
+          enum:
+            - risk_on
+            - risk_off
+            - neutral
+            - long_bias
+            - short_bias
+        conviction:
+          type: number
+          minimum: 0
+          maximum: 1
+        regime_view:
+          type: string
+        time_horizon:
+          type: string
+        liquidity_posture:
+          type: string
+          enum:
+            - normal
+            - cautious
+            - defensive
+            - opportunistic
+        risk_budget_usage:
+          type: number
+          minimum: 0
+          maximum: 1
+        active_factors:
+          type: array
+          items:
+            $ref: "#/components/schemas/FactorExposure"
+        watchlist:
+          type: array
+          items:
+            type: string
+        key_risks:
+          type: array
+          items:
+            type: string
+    ExplainDecisionRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - signal_id
+      properties:
+        signal_id:
+          type: string
+    ExplanationReference:
+      type: object
+      additionalProperties: false
+      required:
+        - kind
+        - value
+      properties:
+        kind:
+          type: string
+          enum:
+            - market_feature
+            - factor
+            - news
+            - portfolio_state
+            - scenario
+        value:
+          type: string
+    DecisionExplanationResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - signal_id
+        - trigger
+        - magnitude
+        - confidence
+        - expected_horizon_minutes
+        - references
+      properties:
+        signal_id:
+          type: string
+        trigger:
+          type: string
+        magnitude:
+          type: number
+          minimum: 0
+          maximum: 1
+        confidence:
+          type: number
+          minimum: 0
+          maximum: 1
+        expected_horizon_minutes:
+          type: integer
+          minimum: 1
+        references:
+          type: array
+          items:
+            $ref: "#/components/schemas/ExplanationReference"
+    ScenarioShock:
+      type: object
+      additionalProperties: false
+      required:
+        - vol_multiplier
+        - spread_multiplier
+        - price_gap_pct
+      properties:
+        vol_multiplier:
+          type: number
+        spread_multiplier:
+          type: number
+        price_gap_pct:
+          type: number
+    StressScenarioRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - scenario_id
+        - description
+        - shock
+      properties:
+        scenario_id:
+          type: string
+        description:
+          type: string
+        shock:
+          $ref: "#/components/schemas/ScenarioShock"
+    FactorChange:
+      type: object
+      additionalProperties: false
+      required:
+        - name
+        - before
+        - after
+      properties:
+        name:
+          type: string
+        before:
+          type: number
+        after:
+          type: number
+    PositioningDelta:
+      type: object
+      additionalProperties: false
+      required:
+        - directional_bias_before
+        - directional_bias_after
+        - conviction_before
+        - conviction_after
+        - factor_changes
+      properties:
+        directional_bias_before:
+          type: string
+        directional_bias_after:
+          type: string
+        conviction_before:
+          type: number
+        conviction_after:
+          type: number
+        factor_changes:
+          type: array
+          items:
+            $ref: "#/components/schemas/FactorChange"
+    StressResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - scenario_id
+        - positioning_delta
+        - summary
+      properties:
+        scenario_id:
+          type: string
+        positioning_delta:
+          $ref: "#/components/schemas/PositioningDelta"
+        summary:
+          type: string

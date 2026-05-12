@@ -1,0 +1,23 @@
+<svg width="320" height="224" viewBox="0 0 320 224" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="320" height="224" rx="18" fill="#FFF2EA"/>
+  <rect x="16" y="16" width="288" height="192" rx="14" fill="url(#bg)"/>
+  <rect x="42" y="92" width="54" height="40" rx="10" fill="#FFF2E9" fill-opacity="0.92"/>
+  <rect x="132" y="68" width="58" height="58" rx="12" fill="#FFF2E9" fill-opacity="0.9"/>
+  <rect x="224" y="98" width="52" height="34" rx="10" fill="#FFF2E9" fill-opacity="0.92"/>
+  <path d="M96 112H122" stroke="#FFD39F" stroke-width="6" stroke-linecap="round"/>
+  <path d="M190 112H224" stroke="#FFD39F" stroke-width="6" stroke-linecap="round"/>
+  <path d="M110 112L122 104V120L110 112Z" fill="#FFD39F"/>
+  <path d="M210 112L222 104V120L210 112Z" fill="#FFD39F"/>
+  <circle cx="161" cy="97" r="11" fill="#FFB25A"/>
+  <path d="M154 98L159 103L169 92" stroke="#7D3D00" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="36" y="159" width="122" height="13" rx="6.5" fill="#351200" fill-opacity="0.15"/>
+  <rect x="36" y="179" width="172" height="10" rx="5" fill="#351200" fill-opacity="0.1"/>
+  <text x="36" y="50" fill="#FFF8F5" font-size="21" font-family="Arial, sans-serif" font-weight="700">AAPL</text>
+  <text x="36" y="72" fill="#FFF8F5" font-size="12" font-family="Arial, sans-serif" opacity="0.86">Supply-chain chatter</text>
+  <defs>
+    <linearGradient id="bg" x1="40" y1="26" x2="280" y2="204" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#B4491E"/>
+      <stop offset="1" stop-color="#6E2610"/>
+    </linearGradient>
+  </defs>
+</svg>

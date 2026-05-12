@@ -1,0 +1,40 @@
+.DS_Store
+
+# Dependencies
+node_modules/
+
+# Next.js build output
+.next/
+out/
+
+# Local environment files
+.env
+.env.*
+!.env.example
+
+# Logs and coverage
+*.log
+coverage/
+
+# TypeScript and build cache
+*.tsbuildinfo
+.turbo/
+
+# Local databases and runtime storage
+*.db
+*.sqlite
+*.sqlite3
+storage/
+
+# Generated Prisma clients are recreated by npm postinstall.
+src/generated/
+
+# Python cache/build artifacts
+__pycache__/
+.pytest_cache/
+*.py[cod]
+*.egg-info/
+
+# Generated local submission archives
+agents/*-upload.zip
+agents/*-upload.tar.gz

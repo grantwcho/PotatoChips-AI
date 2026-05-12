@@ -1,0 +1,34 @@
+universe:
+  - ^VIX
+  - ^VIX3M
+  - SVXY
+  - UVXY
+  - SPY
+
+portfolio:
+  nav_usd: 100000
+  carry_base_pct_nav: 0.04
+  carry_max_pct_nav: 0.08
+  mean_reversion_max_pct_nav: 0.04
+  tail_hedge_max_pct_nav: 0.03
+  max_portfolio_vol_contribution_annualized: 0.03
+
+signals:
+  contango_ratio_threshold: 0.9
+  backwardation_ratio_threshold: 1.05
+  mean_reversion_vix_threshold: 30.0
+  mean_reversion_stop_vix: 40.0
+  cheap_tail_vix_threshold: 13.0
+  confidence_floor: 0.35
+  confidence_ceiling: 0.95
+
+risk:
+  correlation_window_days: 20
+  correlation_threshold: 0.7
+  correlation_fraction_threshold: 0.6
+
+storage:
+  sqlite_path: .data/agt_vol_001.sqlite3
+
+execution:
+  allow_live_execution: true

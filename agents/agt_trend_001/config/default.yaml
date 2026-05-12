@@ -1,0 +1,41 @@
+portfolio:
+  nav_usd: 100000
+  target_daily_vol_per_position: 0.001
+  target_annualized_vol: 0.10
+  max_position_pct_nav: 0.20
+  max_gross_exposure_pct_nav: 1.50
+  max_drawdown_pct: 0.10
+  pause_days_after_breaker: 5
+
+signals:
+  fast_ma_days: 20
+  slow_ma_days: 60
+  trend_filter_days: 200
+  breakout_days: 40
+  atr_window_days: 20
+  trailing_stop_atr_multiple: 3.0
+
+risk:
+  correlation_window_days: 20
+  correlation_threshold: 0.70
+  correlation_fraction_threshold: 0.60
+
+storage:
+  sqlite_path: ".data/agt_trend_001.sqlite3"
+
+execution:
+  allow_live_execution: true
+
+universe:
+  - SPY
+  - QQQ
+  - IWM
+  - TLT
+  - IEF
+  - GLD
+  - SLV
+  - UUP
+  - EFA
+  - EEM
+  - DBC
+  - HYG
