@@ -2,12 +2,12 @@ import Image from "next/image";
 import gptBagDemo from "../../assets/images/GPT_Bag_Demo.png";
 import opusBagDemo from "../../assets/images/Opus_Bag_Demo.png";
 import geminiBagDemo from "../../assets/images/Gemini_Bag_Demo.png";
-import chatgptDemo from "../../assets/images/chatgpt_demo.png";
 import taiwanImage from "../../assets/images/taiwan.png";
-import { Button } from "./button";
 import { HeroCopyReveal } from "./hero-copy-reveal";
 import { MarketDebateShowcase } from "./market-debate-showcase";
 import { OrthogonalitySectionFrame } from "./orthogonality-section-frame";
+import { RecipeChatTranscript } from "./recipe-chat-transcript";
+import { ScrollExpandingCard } from "./scroll-expanding-card";
 import { STOCK_COVERAGE_ENABLED } from "@/lib/stocks/coverage-data";
 
 function ChipBagScene() {
@@ -46,7 +46,7 @@ function TaiwanImageGraphic() {
   return (
     <div
       className="taiwan-image-frame"
-      aria-label="White outline map of Taiwan."
+      aria-label="Outline map of Taiwan."
       role="img"
     >
       <svg
@@ -63,7 +63,7 @@ function TaiwanImageGraphic() {
       </svg>
       <Image
         src={taiwanImage}
-        alt="White outline map of Taiwan."
+        alt="Outline map of Taiwan."
         className="taiwan-image"
         sizes="(max-width: 768px) 82vw, 620px"
       />
@@ -73,71 +73,42 @@ function TaiwanImageGraphic() {
 
 function UniqueValueSection() {
   return (
-    <section className="marketing-orthogonality-section text-white">
-      <div className="marketing-container">
-        <OrthogonalitySectionFrame className="marketing-orthogonality-panel--stacked">
-          <div className="marketing-orthogonality-cell flex min-h-[44rem] flex-col items-center justify-center px-0 py-12 sm:py-16 lg:min-h-[48rem] lg:py-20">
-            <div className="marketing-orthogonality-copy-inner w-full max-w-[48rem] px-4 text-center sm:px-7">
-              <h2 className="font-sans text-[clamp(2.2rem,4vw,4.35rem)] font-light leading-[1.02] tracking-[-0.04em] text-white">
-                Made in Taiwan.
-              </h2>
-              <p className="mx-auto mt-5 max-w-[50rem] font-display text-[clamp(1.15rem,1.45vw,1.55rem)] font-light not-italic leading-[1.32] tracking-[-0.01em] text-white/72">
-                The world depends on Taiwan for their chips. We decided that we
-                should too.
-              </p>
-            </div>
+    <section className="marketing-scroll-card-stage marketing-scroll-card-stage--taiwan relative z-10 pt-12 sm:pt-14 lg:pt-16">
+      <ScrollExpandingCard className="marketing-orthogonality-section marketing-home-light-section marketing-home-taiwan-section marketing-panel-light text-black">
+        <div className="marketing-container">
+          <OrthogonalitySectionFrame className="marketing-orthogonality-panel--stacked">
+            <div className="marketing-orthogonality-cell flex min-h-[44rem] flex-col items-center justify-center px-0 py-12 sm:py-16 lg:min-h-[48rem] lg:py-20">
+              <div className="marketing-orthogonality-copy-inner w-full max-w-[48rem] px-4 text-center sm:px-7">
+                <h2 className="font-sans text-[clamp(2.2rem,4vw,4.35rem)] font-light leading-[1.02] tracking-[-0.04em] text-black">
+                  Made in Taiwan.
+                </h2>
+                <p className="mx-auto mt-5 max-w-[50rem] font-display text-[clamp(1.15rem,1.45vw,1.55rem)] font-light not-italic leading-[1.32] tracking-[-0.01em] text-black/72">
+                  The world depends on Taiwan for their chips. We decided that
+                  we should too.
+                </p>
+              </div>
 
-            <div className="mx-auto mt-12 flex w-full justify-center sm:mt-14">
-              <TaiwanImageGraphic />
+              <div className="mx-auto mt-12 flex w-full justify-center sm:mt-14">
+                <TaiwanImageGraphic />
+              </div>
             </div>
-          </div>
-        </OrthogonalitySectionFrame>
-      </div>
+          </OrthogonalitySectionFrame>
+        </div>
+      </ScrollExpandingCard>
     </section>
   );
 }
 
 function OrthogonalitySection() {
   return (
-    <section className="marketing-orthogonality-section relative z-10 pt-12 text-white sm:pt-14 lg:pt-16">
-      <div className="marketing-container">
-        <OrthogonalitySectionFrame>
-          <div className="marketing-orthogonality-cell marketing-orthogonality-cell--graphic flex min-h-[23rem] items-center justify-center py-10 sm:min-h-[29rem] lg:min-h-[35rem] lg:py-12">
-            <div className="recipe-demo-image-frame marketing-orthogonality-graphic-inner">
-              <Image
-                src={chatgptDemo}
-                alt="ChatGPT-generated Potato Chips AI recipe artwork."
-                className="recipe-demo-image"
-                sizes="(max-width: 1024px) 82vw, 520px"
-              />
-            </div>
-          </div>
-
-          <div className="marketing-orthogonality-cell marketing-orthogonality-cell--copy flex min-h-[25rem] flex-col items-center justify-center px-0 py-10 sm:min-h-[29rem] sm:py-12 lg:min-h-[35rem]">
-            <div className="marketing-orthogonality-copy-inner w-full max-w-[40rem] text-left">
-              <h2 className="max-w-none font-sans text-[clamp(2rem,3.35vw,3.55rem)] font-light leading-[1.04] tracking-[-0.035em] text-white">
-                Our recipe is artificial but <em className="italic">organic</em>.
-              </h2>
-
-              <p className="mt-7 max-w-[34rem] text-base font-light leading-7 text-white/72">
-                Read our heartwarming and powerful story of how we prompted
-                ChatGPT, Claude, and Gemini to overcome the
-                odds and generate recipes for our delicious potato chips.
-              </p>
-
-              <div className="mt-9">
-                <Button
-                  href="/contact"
-                  className="marketing-hero-button !w-auto !min-w-[13.5rem] !bg-transparent"
-                  variant="secondary"
-                >
-                  Contact us
-                </Button>
-              </div>
-            </div>
-          </div>
-        </OrthogonalitySectionFrame>
-      </div>
+    <section className="marketing-scroll-card-stage relative z-10 pt-12 sm:pt-14 lg:pt-16">
+      <ScrollExpandingCard className="marketing-orthogonality-section marketing-home-light-section marketing-panel-light text-black">
+        <div className="marketing-container">
+          <OrthogonalitySectionFrame className="marketing-orthogonality-panel--chat">
+            <RecipeChatTranscript />
+          </OrthogonalitySectionFrame>
+        </div>
+      </ScrollExpandingCard>
     </section>
   );
 }

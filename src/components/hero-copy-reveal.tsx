@@ -15,8 +15,11 @@ const HERO_HEADLINE_SEGMENTS: CharacterTextSegment[] = [
   { className: "italic", text: "hungry" },
   "\nfor more AI chips.\nWe delivered.",
 ];
-const HERO_BODY =
-  "Generations of LLMs and AI hype have bubbled to this point.";
+const HERO_BODY_SEGMENTS: CharacterTextSegment[] = [
+  "Generations of LLMs and AI hype have ",
+  { className: "line-through decoration-current", text: "bubb" },
+  "led to this point.",
+];
 const HERO_HEADLINE_REVEAL_SPEED = 0.5;
 const HERO_BODY_CHARACTER_REVEAL_SPEED = 1.5;
 const HERO_CHARACTER_REVEAL_DURATION_MS = 200;
@@ -30,7 +33,8 @@ const HERO_BODY_DELAY_MS =
   CHARACTER_REVEAL_LINE_OVERLAP_RATIO;
 const HERO_CTA_FALLBACK_DELAY_MS = Math.round(
   HERO_BODY_DELAY_MS +
-    Math.max(0, countRevealCharacters(HERO_BODY) - 1) * HERO_BODY_STAGGER_MS +
+    Math.max(0, countRevealCharacters(HERO_BODY_SEGMENTS) - 1) *
+      HERO_BODY_STAGGER_MS +
     HERO_CHARACTER_REVEAL_DURATION_MS / HERO_BODY_CHARACTER_REVEAL_SPEED,
 );
 
@@ -71,7 +75,7 @@ export function HeroCopyReveal() {
           characterSpeed={HERO_BODY_CHARACTER_REVEAL_SPEED}
           delayMs={HERO_BODY_DELAY_MS}
           onRevealCompleteMsChange={syncCtaDelay}
-          text={HERO_BODY}
+          segments={HERO_BODY_SEGMENTS}
         />
       </p>
       <div
