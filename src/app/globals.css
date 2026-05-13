@@ -823,9 +823,75 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: none;
 }
 
+.marketing-site .marketing-contact-page {
+  min-height: clamp(48rem, 78vh, 62rem);
+  padding: clamp(9rem, 14vw, 13rem) 0 clamp(7rem, 11vw, 10rem);
+  background: #f7f7f7;
+  color: #000000;
+}
+
+.marketing-site .marketing-contact-shell {
+  width: min(72rem, calc(100vw - clamp(2rem, 15vw, 19.5rem) - 2rem));
+  margin-left: clamp(2rem, 15vw, 19.5rem);
+  margin-right: auto;
+}
+
+.marketing-site .marketing-contact-title {
+  margin: 0;
+  color: #000000;
+  font-family: var(--font-google-sans), system-ui, sans-serif;
+  font-size: clamp(4rem, 5vw, 6.35rem);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: -0.07em;
+}
+
+.marketing-site .marketing-contact-intro {
+  max-width: 38rem;
+  margin: clamp(3rem, 5vw, 4.4rem) 0 0;
+  color: #000000;
+  font-size: clamp(1.32rem, 1.55vw, 1.85rem);
+  font-weight: 700;
+  line-height: 1.18;
+  letter-spacing: -0.045em;
+}
+
+.marketing-site .marketing-contact-copy {
+  margin: clamp(4.75rem, 8vw, 7rem) 0 0;
+  color: #000000;
+  font-size: clamp(1.12rem, 1.25vw, 1.5rem);
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -0.035em;
+}
+
+.marketing-site .marketing-contact-copy a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.16em;
+  transition: color 220ms ease;
+}
+
+.marketing-site .marketing-contact-copy a:hover,
+.marketing-site .marketing-contact-copy a:focus-visible {
+  color: #ffaf00;
+}
+
 .marketing-site .marketing-scroll-card-stage {
   background: #000000 !important;
   overflow: clip;
+}
+
+.marketing-site .marketing-scroll-card-stage--chat {
+  background: #000000 !important;
+}
+
+.marketing-site .marketing-scroll-card-stage--taiwan {
+  background: #ffffff !important;
+  z-index: 20;
+  margin-top: clamp(-3.5rem, -4vw, -2rem);
+  padding-top: 0 !important;
 }
 
 .marketing-site .marketing-scroll-expanding-card {
@@ -966,6 +1032,11 @@ h1, h2, h3, h4, h5, h6 {
   animation: marketing-orthogonality-line-x 980ms 260ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
+.marketing-site .marketing-home-taiwan-section .marketing-orthogonality-panel::before,
+.marketing-site .marketing-home-taiwan-section .marketing-orthogonality-panel::after {
+  display: none;
+}
+
 .marketing-site
   .marketing-orthogonality-panel.is-visible
   .marketing-orthogonality-cell
@@ -1081,18 +1152,48 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .marketing-site .recipe-model-toggle {
+  --recipe-toggle-index: 0;
+  position: relative;
+  isolation: isolate;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.25rem;
   width: min(42rem, 100%);
   margin: 0 auto clamp(1.75rem, 3vw, 2.5rem);
   padding: 0.25rem;
-  border: 1px solid rgba(0, 0, 0, 0.12);
+  border: 0;
   border-radius: 999px;
   background: #f3f3f1;
 }
 
+.marketing-site .recipe-model-toggle::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 0.25rem;
+  bottom: 0.25rem;
+  left: 0.25rem;
+  width: calc((100% - 1rem) / 3);
+  border-radius: 999px;
+  background: #111111;
+  box-shadow: 0 0.35rem 1rem rgba(0, 0, 0, 0.12);
+  transform: translateX(
+    calc(var(--recipe-toggle-index) * (100% + 0.25rem))
+  );
+  transition: transform 280ms cubic-bezier(0.2, 0.82, 0.22, 1);
+}
+
+.marketing-site .recipe-model-toggle--claude {
+  --recipe-toggle-index: 1;
+}
+
+.marketing-site .recipe-model-toggle--gemini {
+  --recipe-toggle-index: 2;
+}
+
 .marketing-site .recipe-model-toggle__option {
+  position: relative;
+  z-index: 1;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1118,13 +1219,17 @@ h1, h2, h3, h4, h5, h6 {
   flex: 0 0 auto;
   width: 1.05rem;
   height: 1.05rem;
-  color: currentColor;
+  object-fit: contain;
 }
 
 .marketing-site .recipe-model-toggle__option.is-active {
-  background: #111111;
   color: #ffffff;
-  box-shadow: 0 0.35rem 1rem rgba(0, 0, 0, 0.12);
+}
+
+.marketing-site
+  .recipe-model-toggle__option.is-active
+  .recipe-model-toggle__icon--gpt {
+  filter: invert(1);
 }
 
 .marketing-site .recipe-chat-prompt-row {
@@ -1145,27 +1250,44 @@ h1, h2, h3, h4, h5, h6 {
   letter-spacing: 0;
 }
 
+.marketing-site .recipe-chat-prompt--gpt {
+  background: #000000;
+  color: #ffffff;
+}
+
 .marketing-site .recipe-chat-prompt--claude {
   max-width: 70%;
   border-radius: 1.2rem;
 }
 
 .marketing-site .recipe-chat-prompt--gemini {
+  background: #e8eef7;
   border: 0;
   color: #202124;
 }
 
-.marketing-site .recipe-chat-transcript:not(.is-revealing) .recipe-chat-prompt,
 .marketing-site
-  .recipe-chat-transcript:not(.is-revealing)
-  .recipe-response-reveal {
+  .recipe-chat-transcript:not(.is-revealing):not(.has-revealed)
+  .recipe-chat-prompt,
+.marketing-site
+  .recipe-chat-transcript:not(.is-revealing):not(.has-revealed)
+  .recipe-response-reveal,
+.marketing-site
+  .recipe-chat-transcript:not(.is-revealing):not(.has-revealed)
+  .recipe-response-reveal-line {
+  opacity: 0;
+}
+
+.marketing-site
+  .recipe-chat-transcript:not(.is-revealing):not(.has-revealed)
+  .recipe-response-reveal-list-item {
   opacity: 0;
 }
 
 .marketing-site .recipe-chat-transcript.is-revealing .recipe-chat-prompt {
   opacity: 0;
   transform: translate3d(0, 0.65rem, 0);
-  animation: recipe-prompt-fade-in 420ms cubic-bezier(0.2, 0.82, 0.22, 1)
+  animation: recipe-prompt-fade-in 500ms cubic-bezier(0.2, 0.82, 0.22, 1)
     forwards;
 }
 
@@ -1173,9 +1295,39 @@ h1, h2, h3, h4, h5, h6 {
   opacity: 0;
   transform: translate3d(-0.7rem, 0, 0);
   clip-path: inset(0 100% 0 0);
-  animation: recipe-response-type-in 380ms cubic-bezier(0.2, 0.82, 0.22, 1)
+  animation: recipe-response-type-in 680ms cubic-bezier(0.2, 0.82, 0.22, 1)
     forwards;
-  animation-delay: calc(520ms + (var(--recipe-reveal-index) * 48ms));
+  animation-delay: calc(700ms + (var(--recipe-reveal-index) * 140ms));
+  will-change: clip-path, opacity, transform;
+}
+
+.marketing-site .recipe-response-reveal-line {
+  --recipe-reveal-index: 0;
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+}
+
+.marketing-site .recipe-response-reveal-list-item {
+  --recipe-reveal-index: 0;
+}
+
+.marketing-site
+  .recipe-chat-transcript.is-revealing
+  .recipe-response-reveal-list-item {
+  opacity: 0;
+  animation: recipe-list-marker-fade-in 260ms cubic-bezier(0.2, 0.82, 0.22, 1)
+    forwards;
+  animation-delay: calc(700ms + (var(--recipe-reveal-index) * 140ms));
+}
+
+.marketing-site .recipe-chat-transcript.is-revealing .recipe-response-reveal-line {
+  opacity: 0;
+  transform: translate3d(-0.7rem, 0, 0);
+  clip-path: inset(0 100% 0 0);
+  animation: recipe-response-type-in 720ms cubic-bezier(0.2, 0.82, 0.22, 1)
+    forwards;
+  animation-delay: calc(700ms + (var(--recipe-reveal-index) * 140ms));
   will-change: clip-path, opacity, transform;
 }
 
@@ -1273,12 +1425,20 @@ h1, h2, h3, h4, h5, h6 {
   display: flex;
   gap: 0.75rem;
   overflow-x: auto;
+  overflow-y: hidden;
   overscroll-behavior-x: contain;
   padding: 0 0 0.45rem;
   scroll-padding-inline: 0.25rem;
   scroll-snap-type: x mandatory;
-  scrollbar-width: thin;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   -webkit-overflow-scrolling: touch;
+}
+
+.marketing-site .claude-web-track::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
 }
 
 .marketing-site .claude-web-track:focus-visible {
@@ -1320,10 +1480,76 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .marketing-site .claude-recipe-card {
+  --claude-card-end-height: none;
+  --claude-card-grow-delay: 0ms;
+  --claude-card-grow-duration: 1ms;
+  --claude-card-start-height: none;
+  box-sizing: border-box;
+  isolation: isolate;
+  position: relative;
   margin-top: 1.75rem;
   padding: clamp(1.25rem, 3vw, 2rem);
-  border: 1px solid rgba(0, 0, 0, 0.12);
   border-radius: 1.25rem;
+  background: transparent;
+}
+
+.marketing-site .claude-recipe-card::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  border-radius: inherit;
+  background: #ffffff;
+}
+
+.marketing-site .claude-recipe-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.marketing-site .claude-recipe-card-outline {
+  pointer-events: none;
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  border: 1px solid #dddddd;
+  border-radius: inherit;
+}
+
+.marketing-site
+  .recipe-chat-transcript:not(.is-revealing):not(.has-revealed)
+  .claude-recipe-card::before {
+  opacity: 0;
+}
+
+.marketing-site .recipe-chat-transcript.is-revealing .claude-recipe-card {
+  max-height: var(--claude-card-start-height);
+  overflow: hidden;
+  animation: claude-recipe-card-grow var(--claude-card-grow-duration) linear
+    forwards;
+  animation-delay: var(--claude-card-grow-delay);
+  will-change: max-height;
+}
+
+.marketing-site
+  .recipe-chat-transcript.is-revealing
+  .claude-recipe-card::before {
+  opacity: 0;
+  transform: translate3d(0, 0.65rem, 0);
+  animation: recipe-prompt-fade-in 500ms cubic-bezier(0.2, 0.82, 0.22, 1)
+    forwards;
+  animation-delay: calc(700ms + (var(--recipe-reveal-index) * 140ms));
+  will-change: opacity, transform;
+}
+
+.marketing-site
+  .recipe-chat-transcript.is-revealing
+  .claude-recipe-card-outline,
+.marketing-site .recipe-chat-transcript.is-revealing .claude-web-card,
+.marketing-site .recipe-chat-transcript.is-revealing .claude-cooking-button {
+  clip-path: none;
+  transform: translate3d(0, 0.65rem, 0);
+  animation-name: recipe-prompt-fade-in;
 }
 
 .marketing-site .claude-recipe-card h2 {
@@ -1382,8 +1608,10 @@ h1, h2, h3, h4, h5, h6 {
 .marketing-site .claude-step-number {
   display: grid;
   place-items: center;
+  align-self: start;
   width: 2rem;
   height: 2rem;
+  margin-top: 0.32rem;
   border: 1px solid rgba(0, 0, 0, 0.14);
   border-radius: 999px;
   color: rgba(0, 0, 0, 0.55);
@@ -1391,10 +1619,31 @@ h1, h2, h3, h4, h5, h6 {
 
 .marketing-site .claude-notes {
   margin-top: 2rem;
-  padding: 1.25rem;
+  padding: 1.2rem 1.25rem 1.25rem;
   border-radius: 1.2rem;
   background: #f3f2ef;
   color: rgba(0, 0, 0, 0.75);
+}
+
+.marketing-site
+  .recipe-chat-transcript:not(.is-revealing):not(.has-revealed)
+  .claude-notes {
+  opacity: 0;
+}
+
+.marketing-site .recipe-chat-transcript.is-revealing .claude-notes {
+  opacity: 0;
+  transform: translate3d(0, 0.45rem, 0);
+  animation: recipe-prompt-fade-in 520ms cubic-bezier(0.2, 0.82, 0.22, 1)
+    forwards;
+  animation-delay: calc(700ms + (var(--recipe-reveal-index) * 140ms));
+  will-change: opacity, transform;
+}
+
+.marketing-site .claude-notes h3 {
+  margin: 0 0 0.55rem;
+  color: rgba(0, 0, 0, 0.56);
+  font-weight: 400;
 }
 
 .marketing-site .claude-honest-take {
@@ -1410,27 +1659,36 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 30px;
 }
 
+.marketing-site .claude-honest-take-title {
+  margin-bottom: 1rem;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 30px;
+}
+
 .marketing-site .claude-honest-take ol {
-  counter-reset: claude-honest-take;
-  display: grid;
-  gap: 0.9rem;
   margin: 0 0 1.6rem;
-  padding: 0;
+  padding-left: 2.35rem;
+  list-style: decimal;
 }
 
 .marketing-site .claude-honest-take li {
-  counter-increment: claude-honest-take;
-  display: grid;
-  grid-template-columns: 2.35rem minmax(0, 1fr);
-  gap: 0.55rem;
-  padding-left: 0;
+  display: list-item;
+  margin: 0 0 0.9rem;
+  padding-left: 0.55rem;
 }
 
-.marketing-site .claude-honest-take li::before {
-  content: counter(claude-honest-take) ".";
+.marketing-site .claude-honest-take li:last-child {
+  margin-bottom: 0;
+}
+
+.marketing-site .claude-honest-take li::marker {
   color: #111111;
   font-variant-numeric: tabular-nums;
-  text-align: right;
+}
+
+.marketing-site .claude-honest-take li > .recipe-response-line-group {
+  margin: 0;
 }
 
 .marketing-site .recipe-chat-response--gemini {
@@ -1478,6 +1736,17 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 1;
 }
 
+.marketing-site .gemini-thinking__chevron {
+  width: 0.8rem;
+  height: 0.8rem;
+  flex: 0 0 auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.25;
+}
+
 @media (max-width: 640px) {
   .marketing-site .marketing-orthogonality-panel--chat {
     padding: 3rem 1rem 4rem;
@@ -1486,6 +1755,16 @@ h1, h2, h3, h4, h5, h6 {
   .marketing-site .recipe-model-toggle {
     grid-template-columns: minmax(0, 1fr);
     border-radius: 1.2rem;
+  }
+
+  .marketing-site .recipe-model-toggle::before {
+    right: 0.25rem;
+    bottom: auto;
+    width: auto;
+    height: 2.35rem;
+    transform: translateY(
+      calc(var(--recipe-toggle-index) * (100% + 0.25rem))
+    );
   }
 
   .marketing-site .recipe-chat-prompt-row {
@@ -1526,16 +1805,52 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
+@keyframes claude-recipe-card-grow {
+  from {
+    max-height: var(--claude-card-start-height);
+  }
+
+  to {
+    max-height: var(--claude-card-end-height);
+  }
+}
+
+@keyframes recipe-list-marker-fade-in {
+  to {
+    opacity: 1;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .marketing-site .recipe-chat-transcript:not(.is-revealing) .recipe-chat-prompt,
-  .marketing-site
-    .recipe-chat-transcript:not(.is-revealing)
-    .recipe-response-reveal,
   .marketing-site .recipe-chat-transcript.is-revealing .recipe-chat-prompt,
-  .marketing-site .recipe-chat-transcript.is-revealing .recipe-response-reveal {
+  .marketing-site .recipe-chat-transcript.is-revealing .recipe-response-reveal,
+  .marketing-site
+    .recipe-chat-transcript.is-revealing
+    .recipe-response-reveal-line,
+  .marketing-site
+    .recipe-chat-transcript.is-revealing
+    .recipe-response-reveal-list-item,
+  .marketing-site .recipe-chat-transcript.has-revealed .recipe-chat-prompt,
+  .marketing-site .recipe-chat-transcript.has-revealed .recipe-response-reveal,
+  .marketing-site
+    .recipe-chat-transcript.has-revealed
+    .recipe-response-reveal-line,
+  .marketing-site
+    .recipe-chat-transcript.has-revealed
+    .recipe-response-reveal-list-item,
+  .marketing-site .recipe-chat-transcript.is-revealing .claude-recipe-card,
+  .marketing-site .recipe-chat-transcript.is-revealing .claude-notes {
     opacity: 1;
     transform: none;
     clip-path: inset(0 0 0 0);
+    max-height: none;
+    animation: none;
+  }
+
+  .marketing-site .recipe-chat-transcript.is-revealing .claude-recipe-card::before,
+  .marketing-site .recipe-chat-transcript.has-revealed .claude-recipe-card::before {
+    opacity: 1;
+    transform: none;
     animation: none;
   }
 }
@@ -1723,31 +2038,16 @@ h1, h2, h3, h4, h5, h6 {
   -webkit-touch-callout: none;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
-  transition:
-    color 180ms ease,
-    opacity 180ms ease;
+  transition: color 220ms ease;
 }
 
 .marketing-site .marketing-nav-link::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -0.3rem;
-  width: 100%;
-  height: 1px;
-  background: rgba(255, 255, 255, 0.86);
-  transform: scaleX(0);
-  transform-origin: left center;
-  transition: transform 180ms ease;
+  content: none;
 }
 
-.marketing-site .marketing-nav-link:hover {
-  color: #ffffff;
-}
-
-.marketing-site .marketing-nav-link:hover::after,
-.marketing-site .marketing-nav-link:focus-visible::after {
-  transform: scaleX(1);
+.marketing-site .marketing-nav-link:hover,
+.marketing-site .marketing-nav-link:focus-visible {
+  color: #ffaf00;
 }
 
 .marketing-site .research-archive-link {
@@ -1798,12 +2098,12 @@ h1, h2, h3, h4, h5, h6 {
   color: #ffffff;
 }
 
-.marketing-site .marketing-site-nav--interior .marketing-nav-link::after {
-  background: rgba(255, 255, 255, 0.86);
-}
-
-.marketing-site .marketing-site-nav--interior .marketing-nav-link:hover {
-  color: #ffffff;
+.marketing-site .marketing-site-nav .marketing-nav-link {
+  font-family: var(--font-google-sans), system-ui, sans-serif;
+  font-size: clamp(1rem, 1.08vw, 1.16rem);
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 1;
 }
 
 .marketing-site .marketing-site-nav--home .marketing-logo,
@@ -1811,12 +2111,11 @@ h1, h2, h3, h4, h5, h6 {
   color: #ffffff;
 }
 
-.marketing-site .marketing-site-nav--home .marketing-nav-link::after {
-  background: rgba(255, 255, 255, 0.86);
-}
-
-.marketing-site .marketing-site-nav--home .marketing-nav-link:hover {
-  color: #ffffff;
+.marketing-site .marketing-site-nav--interior .marketing-nav-link:hover,
+.marketing-site .marketing-site-nav--interior .marketing-nav-link:focus-visible,
+.marketing-site .marketing-site-nav--home .marketing-nav-link:hover,
+.marketing-site .marketing-site-nav--home .marketing-nav-link:focus-visible {
+  color: #ffaf00;
 }
 
 .marketing-site .marketing-panel-light {

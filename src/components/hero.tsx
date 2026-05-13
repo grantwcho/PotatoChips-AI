@@ -101,7 +101,7 @@ function UniqueValueSection() {
 
 function OrthogonalitySection() {
   return (
-    <section className="marketing-scroll-card-stage relative z-10 pt-12 sm:pt-14 lg:pt-16">
+    <section className="marketing-scroll-card-stage marketing-scroll-card-stage--chat relative z-10 pt-12 sm:pt-14 lg:pt-16">
       <ScrollExpandingCard className="marketing-orthogonality-section marketing-home-light-section marketing-panel-light text-black">
         <div className="marketing-container">
           <OrthogonalitySectionFrame className="marketing-orthogonality-panel--chat">

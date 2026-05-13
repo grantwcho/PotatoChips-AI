@@ -2,18 +2,27 @@
 
 import Image, { type StaticImageData } from "next/image";
 import {
+  useCallback,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
   type CSSProperties,
-  type ReactElement,
+  type ReactNode,
 } from "react";
+import claudeLogoIcon from "../../assets/icons/claude_logo.png";
+import geminiLogoIcon from "../../assets/icons/gemini_logo.png";
+import openAiLogoIcon from "../../assets/icons/openai_logo.png";
 import claudeChip55Recipes from "../../assets/images/claude-chip-55recipes.webp";
 import claudeChipInspired from "../../assets/images/claude-chip-inspired.jpg";
 import claudeChipMummyrecipes from "../../assets/images/claude-chip-mummyrecipes.jpg";
 
 const PROMPT =
   "Give me the most perfect, best-tasting, addictive, but healthy potato chips recipe.";
+const REVEAL_INITIAL_DELAY_MS = 700;
+const REVEAL_STAGGER_MS = 140;
+const REVEAL_LINE_DURATION_MS = 720;
+const REVEAL_COMPLETION_BUFFER_MS = 650;
 
 type RecipeModel = "gpt" | "claude" | "gemini";
 
@@ -21,78 +30,8 @@ type RevealStyle = CSSProperties & {
   "--recipe-reveal-index": number;
 };
 
-function ChatGptLogoIcon() {
-  return (
-    <svg
-      aria-hidden="true"
-      className="recipe-model-toggle__icon"
-      fill="none"
-      viewBox="0 0 24 24"
-    >
-      <path
-        d="M9.45 4.2a4.15 4.15 0 0 1 6.95 2.1 4.18 4.18 0 0 1 2.2 6.92 4.16 4.16 0 0 1-3.53 6.02 4.17 4.17 0 0 1-7.08.54 4.16 4.16 0 0 1-2.33-6.88A4.17 4.17 0 0 1 9.45 4.2Z"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="1.7"
-      />
-      <path
-        d="M8.03 7.88 12 5.6l3.97 2.28M5.98 12.98V8.46l3.93-2.3M8.03 16.12l-3.97-2.28v-4.6M15.97 16.12 12 18.4l-3.97-2.28M18.02 11.02v4.52l-3.93 2.3M15.97 7.88l3.97 2.28v4.6"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="1.45"
-      />
-      <path
-        d="m12 8.9 2.68 1.55v3.1L12 15.1l-2.68-1.55v-3.1L12 8.9Z"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="1.35"
-      />
-    </svg>
-  );
-}
-
-function ClaudeLogoIcon() {
-  return (
-    <svg
-      aria-hidden="true"
-      className="recipe-model-toggle__icon"
-      fill="none"
-      viewBox="0 0 24 24"
-    >
-      <path
-        d="M12 3.8v16.4M5.25 7.1l13.5 9.8M18.75 7.1l-13.5 9.8M3.9 12h16.2"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeWidth="2.1"
-      />
-      <circle cx="12" cy="12" fill="currentColor" r="2.05" />
-    </svg>
-  );
-}
-
-function GeminiLogoIcon() {
-  return (
-    <svg
-      aria-hidden="true"
-      className="recipe-model-toggle__icon"
-      fill="none"
-      viewBox="0 0 24 24"
-    >
-      <path
-        d="M12 2.9c.9 4.75 3.45 7.3 8.2 8.1-4.75.9-7.3 3.45-8.2 8.2-.9-4.75-3.45-7.3-8.2-8.2 4.75-.8 7.3-3.35 8.2-8.1Z"
-        fill="currentColor"
-      />
-      <path
-        d="M18.35 16.65c.3 1.55 1.15 2.4 2.7 2.7-1.55.3-2.4 1.15-2.7 2.7-.3-1.55-1.15-2.4-2.7-2.7 1.55-.3 2.4-1.15 2.7-2.7Z"
-        fill="currentColor"
-        opacity="0.72"
-      />
-    </svg>
-  );
-}
+const REVEAL_SELECTOR =
+  ".recipe-response-reveal, .recipe-response-reveal-line, .recipe-response-reveal-list-item, .claude-recipe-card";
 
 const claudeWebResults = [
   {
@@ -113,13 +52,13 @@ const claudeWebResults = [
 ] satisfies Array<{ alt: string; label: string; src: StaticImageData }>;
 
 const modelOptions: Array<{
-  Icon: () => ReactElement;
+  icon: StaticImageData;
   id: RecipeModel;
   label: string;
 }> = [
-  { Icon: ChatGptLogoIcon, id: "gpt", label: "GPT-5.5 Pro" },
-  { Icon: ClaudeLogoIcon, id: "claude", label: "Opus 4.7 Adaptive" },
-  { Icon: GeminiLogoIcon, id: "gemini", label: "Gemini 3.1 Pro" },
+  { icon: openAiLogoIcon, id: "gpt", label: "GPT-5.5 Pro" },
+  { icon: claudeLogoIcon, id: "claude", label: "Opus 4.7 Adaptive" },
+  { icon: geminiLogoIcon, id: "gemini", label: "Gemini 3.1 Pro" },
 ];
 
 const chipsIngredients = [
@@ -252,6 +191,35 @@ const claudeFlavorNotes = [
   "Spicy: Add 1/4 tsp cayenne or 1/2 tsp chili powder",
 ];
 
+const claudeThinkingLine =
+  "Engineered crispy oven-baked chips balancing flavor, nutrition, and minimal oil >";
+const claudeLedeText =
+  "Same shattering crunch, same compulsive umami pull - but oven-baked with about 1/8th the oil of fried chips. The trick is treating baking like dehydration plus browning: drive out every drop of water first, then let the Maillard reaction do its work. Nutritional yeast becomes the secret weapon here - it's loaded with B vitamins and delivers a cheesy-savory hit that masks the fact that you're eating roughly 80% less fat.";
+const claudeRecipeSummary =
+  "Oven-baked, skin-on, and seasoned with a B-vitamin-packed umami salt - all the addictive crunch with a fraction of the oil.";
+const claudeHonestTakeIntro =
+  'The honest take on what makes this "healthy but still addictive":';
+const claudeHonestTakeItems = [
+  {
+    lead: "Nutritional yeast does heavy lifting.",
+    text: "It hits the same cheese-and-umami receptors that fried fat does, but adds B vitamins and a bit of protein and fiber.",
+  },
+  {
+    lead: "Oil quantity, not type, is the main health lever.",
+    text: "Going from 1 cup of absorbed oil to 1 tablespoon is roughly 800 fewer fat calories per batch.",
+  },
+  {
+    lead: "Skin on, always.",
+    text: "Most of a potato's nutrients are in or just under the skin.",
+  },
+  {
+    lead: "The cooling crisp.",
+    text: "Baked chips come out of the oven slightly soft and finish crisping as they cool.",
+  },
+];
+const claudeHonestTakeOutro =
+  "If you want the absolute most addictive version of this recipe, the air fryer at 360\u00b0F gets you closest to fried texture because the high-velocity airflow crisps surfaces faster than a still oven. The microwave method is the surprise sleeper hit for solo snacking - zero oil, four minutes, genuinely good.";
+
 const geminiEquipment = [
   {
     label: "Mandoline Slicer",
@@ -295,24 +263,184 @@ function revealProps(order: number, className?: string) {
   };
 }
 
+function revealLineProps(order: number) {
+  return {
+    className: "recipe-response-reveal-line",
+    style: { "--recipe-reveal-index": order } as RevealStyle,
+  };
+}
+
+function revealListItemProps(order: number) {
+  return {
+    className: "recipe-response-reveal-list-item",
+    style: { "--recipe-reveal-index": order } as RevealStyle,
+  };
+}
+
+function getRevealIndexRange(node: HTMLElement) {
+  let minRevealIndex = Number.POSITIVE_INFINITY;
+  let maxRevealIndex = 0;
+
+  node.querySelectorAll<HTMLElement>(REVEAL_SELECTOR).forEach((element) => {
+    const revealIndex = Number.parseFloat(
+      element.style.getPropertyValue("--recipe-reveal-index"),
+    );
+
+    if (Number.isFinite(revealIndex)) {
+      minRevealIndex = Math.min(minRevealIndex, revealIndex);
+      maxRevealIndex = Math.max(maxRevealIndex, revealIndex);
+    }
+  });
+
+  return {
+    max: maxRevealIndex,
+    min: Number.isFinite(minRevealIndex) ? minRevealIndex : 0,
+  };
+}
+
+function setClaudeCardGrowthMetrics(root: HTMLElement) {
+  const card = root.querySelector<HTMLElement>(".claude-recipe-card");
+  const imageBlock = root.querySelector<HTMLElement>(
+    ".claude-recipe-card .claude-web-results",
+  );
+
+  if (!card || !imageBlock) {
+    return;
+  }
+
+  const cardRect = card.getBoundingClientRect();
+  const imageBlockRect = imageBlock.getBoundingClientRect();
+  const cardStyles = globalThis.getComputedStyle(card);
+  const bottomPadding = Number.parseFloat(cardStyles.paddingBottom) || 0;
+  const startHeight = Math.ceil(
+    imageBlockRect.bottom - cardRect.top + bottomPadding,
+  );
+  const cardRevealRange = getRevealIndexRange(card);
+  const imageRevealRange = getRevealIndexRange(imageBlock);
+  const growStartIndex = Math.min(
+    cardRevealRange.max,
+    imageRevealRange.max + 1,
+  );
+  const growDelay =
+    REVEAL_INITIAL_DELAY_MS + growStartIndex * REVEAL_STAGGER_MS;
+  const growDuration = Math.max(
+    REVEAL_LINE_DURATION_MS,
+    (cardRevealRange.max - growStartIndex) * REVEAL_STAGGER_MS +
+      REVEAL_LINE_DURATION_MS,
+  );
+
+  card.style.setProperty(
+    "--claude-card-start-height",
+    `${Math.max(0, startHeight)}px`,
+  );
+  card.style.setProperty(
+    "--claude-card-end-height",
+    `${Math.max(startHeight, Math.ceil(card.scrollHeight))}px`,
+  );
+  card.style.setProperty("--claude-card-grow-delay", `${growDelay}ms`);
+  card.style.setProperty("--claude-card-grow-duration", `${growDuration}ms`);
+}
+
+function getRevealCompletionDelay(node: HTMLElement) {
+  let maxRevealIndex = 0;
+
+  node.querySelectorAll<HTMLElement>(REVEAL_SELECTOR).forEach((element) => {
+    const revealIndex = Number.parseFloat(
+      element.style.getPropertyValue("--recipe-reveal-index"),
+    );
+
+    if (Number.isFinite(revealIndex)) {
+      maxRevealIndex = Math.max(maxRevealIndex, revealIndex);
+    }
+  });
+
+  return (
+    REVEAL_INITIAL_DELAY_MS +
+    maxRevealIndex * REVEAL_STAGGER_MS +
+    REVEAL_LINE_DURATION_MS +
+    REVEAL_COMPLETION_BUFFER_MS
+  );
+}
+
+function splitRecipeTextIntoLines(text: string) {
+  const maxLineLength = 74;
+  const words = text.trim().split(/\s+/);
+  const lines: string[] = [];
+  let currentLine = "";
+
+  for (const word of words) {
+    const candidate = currentLine ? `${currentLine} ${word}` : word;
+
+    if (candidate.length > maxLineLength && currentLine) {
+      lines.push(currentLine);
+      currentLine = word;
+    } else {
+      currentLine = candidate;
+    }
+  }
+
+  if (currentLine) {
+    lines.push(currentLine);
+  }
+
+  return lines;
+}
+
+function countRecipeTextLines(items: string[]) {
+  return items.reduce(
+    (total, item) => total + splitRecipeTextIntoLines(item).length,
+    0,
+  );
+}
+
+function getRecipeLineGroups(items: string[]) {
+  const lineGroups = items.map((item) => ({
+    item,
+    lines: splitRecipeTextIntoLines(item),
+  }));
+
+  return lineGroups.map((group, index) => ({
+    ...group,
+    startOffset: lineGroups
+      .slice(0, index)
+      .reduce((total, previousGroup) => total + previousGroup.lines.length, 0),
+  }));
+}
+
 function RecipeBulletList({
-  getRevealIndex,
   items,
+  revealStartIndex,
 }: {
-  getRevealIndex?: () => number;
   items: string[];
+  revealStartIndex?: number;
 }) {
+  const lineGroups = getRecipeLineGroups(items);
+
   return (
     <ul>
-      {items.map((item) => {
-        const order = getRevealIndex?.();
+      {lineGroups.map(({ item, lines, startOffset }) => {
+        const lineStartIndex =
+          revealStartIndex === undefined
+            ? undefined
+            : revealStartIndex + startOffset;
 
         return (
           <li
             key={item}
-            {...(order === undefined ? {} : revealProps(order))}
+            {...(lineStartIndex === undefined
+              ? {}
+              : revealListItemProps(lineStartIndex))}
           >
-            {item}
+            {lines.map((line, index) => (
+              <span
+                key={`${index}-${line}`}
+                {...(lineStartIndex === undefined
+                  ? { className: "recipe-response-reveal-line" }
+                  : revealLineProps(lineStartIndex + index))}
+              >
+                {line}
+              </span>
+            ))}
           </li>
         );
       })}
@@ -321,23 +449,43 @@ function RecipeBulletList({
 }
 
 function RecipeParagraphs({
-  getRevealIndex,
+  className,
   items,
+  revealStartIndex,
 }: {
-  getRevealIndex?: () => number;
+  className?: string;
   items: string[];
+  revealStartIndex?: number;
 }) {
+  const lineGroups = getRecipeLineGroups(items);
+
   return (
     <>
-      {items.map((item) => {
-        const order = getRevealIndex?.();
+      {lineGroups.map(({ item, lines, startOffset }) => {
+        const lineStartIndex =
+          revealStartIndex === undefined
+            ? undefined
+            : revealStartIndex + startOffset;
 
         return (
           <p
+            className={
+              className
+                ? `recipe-response-line-group ${className}`
+                : "recipe-response-line-group"
+            }
             key={item}
-            {...(order === undefined ? {} : revealProps(order))}
           >
-            {item}
+            {lines.map((line, index) => (
+              <span
+                key={`${index}-${line}`}
+                {...(lineStartIndex === undefined
+                  ? { className: "recipe-response-reveal-line" }
+                  : revealLineProps(lineStartIndex + index))}
+              >
+                {line}
+              </span>
+            ))}
           </p>
         );
       })}
@@ -345,9 +493,59 @@ function RecipeParagraphs({
   );
 }
 
+function getStrongLeadLines(lead: string, text: string) {
+  return splitRecipeTextIntoLines(`${lead} ${text}`).map((line, index) => {
+    if (index === 0 && line.startsWith(lead)) {
+      return (
+        <>
+          <strong>{lead}</strong>
+          {line.slice(lead.length)}
+        </>
+      );
+    }
+
+    return line;
+  });
+}
+
+function countStrongLeadLines(lead: string, text: string) {
+  return splitRecipeTextIntoLines(`${lead} ${text}`).length;
+}
+
+function RecipeLineGroup({
+  className,
+  lines,
+  revealStartIndex,
+}: {
+  className?: string;
+  lines: ReactNode[];
+  revealStartIndex: number;
+}) {
+  return (
+    <p
+      className={
+        className
+          ? `recipe-response-line-group ${className}`
+          : "recipe-response-line-group"
+      }
+    >
+      {lines.map((line, index) => (
+        <span key={index} {...revealLineProps(revealStartIndex + index)}>
+          {line}
+        </span>
+      ))}
+    </p>
+  );
+}
+
 function GptRecipeResponse() {
   let revealIndex = 0;
   const nextReveal = () => revealIndex++;
+  const nextRevealRange = (length: number) => {
+    const start = revealIndex;
+    revealIndex += length;
+    return start;
+  };
 
   return (
     <article className="recipe-chat-response recipe-chat-response--gpt">
@@ -359,40 +557,58 @@ function GptRecipeResponse() {
         Healthier &ldquo;can&rsquo;t-stop&rdquo; potato chips
       </h2>
 
-      <p {...revealProps(nextReveal())}>
-        These are <strong>air-fried or baked</strong>, use very little oil, and
-        get their snack-shop flavor from{" "}
-        <strong>
-          vinegar, umami, garlic, onion, smoked paprika, and a fine seasoning
-          powder
-        </strong>{" "}
-        instead of heavy salt or deep frying.
-      </p>
+      <RecipeLineGroup
+        lines={[
+          <>
+            These are <strong>air-fried or baked</strong>, use very little oil,
+            and get their snack-shop flavor from
+          </>,
+          <>
+            <strong>vinegar, umami, garlic, onion, smoked paprika, and a fine
+              seasoning powder</strong>
+          </>,
+          <>instead of heavy salt or deep frying.</>,
+        ]}
+        revealStartIndex={nextRevealRange(3)}
+      />
 
       <h3 {...revealProps(nextReveal())}>Ingredients</h3>
 
       <h4 {...revealProps(nextReveal())}>Chips</h4>
       <RecipeBulletList
-        getRevealIndex={nextReveal}
         items={chipsIngredients}
+        revealStartIndex={nextRevealRange(
+          countRecipeTextLines(chipsIngredients),
+        )}
       />
 
       <h4 {...revealProps(nextReveal())}>Healthy addictive seasoning</h4>
       <RecipeBulletList
-        getRevealIndex={nextReveal}
         items={seasoningIngredients}
+        revealStartIndex={nextRevealRange(
+          countRecipeTextLines(seasoningIngredients),
+        )}
       />
 
       <h3 {...revealProps(nextReveal())}>Method</h3>
-      <RecipeParagraphs getRevealIndex={nextReveal} items={methodSteps} />
+      <RecipeParagraphs
+        items={methodSteps}
+        revealStartIndex={nextRevealRange(countRecipeTextLines(methodSteps))}
+      />
 
       <h3 {...revealProps(nextReveal())}>
         Air fryer method &mdash; best texture
       </h3>
-      <RecipeParagraphs getRevealIndex={nextReveal} items={airFryerSteps} />
+      <RecipeParagraphs
+        items={airFryerSteps}
+        revealStartIndex={nextRevealRange(countRecipeTextLines(airFryerSteps))}
+      />
 
       <h3 {...revealProps(nextReveal())}>Oven method</h3>
-      <RecipeParagraphs getRevealIndex={nextReveal} items={ovenSteps} />
+      <RecipeParagraphs
+        items={ovenSteps}
+        revealStartIndex={nextRevealRange(countRecipeTextLines(ovenSteps))}
+      />
 
       <h3 {...revealProps(nextReveal())}>Why these taste so good</h3>
       <p {...revealProps(nextReveal())}>
@@ -408,8 +624,10 @@ function GptRecipeResponse() {
       </h3>
       <p {...revealProps(nextReveal())}>Add this to the seasoning:</p>
       <RecipeBulletList
-        getRevealIndex={nextReveal}
         items={variationIngredients}
+        revealStartIndex={nextRevealRange(
+          countRecipeTextLines(variationIngredients),
+        )}
       />
 
       <h3 {...revealProps(nextReveal())}>Crispness rules</h3>
@@ -427,17 +645,17 @@ function GptRecipeResponse() {
 }
 
 function ClaudeImageStrip({
-  getRevealIndex,
+  revealStartIndex,
 }: {
-  getRevealIndex: () => number;
+  revealStartIndex: number;
 }) {
   return (
     <div className="claude-web-results" aria-label="Results from the web">
       <div className="claude-web-track" tabIndex={0}>
-        {claudeWebResults.map(({ alt, label, src }) => (
+        {claudeWebResults.map(({ alt, label, src }, index) => (
           <figure
             key={label}
-            {...revealProps(getRevealIndex(), "claude-web-card")}
+            {...revealProps(revealStartIndex + index, "claude-web-card")}
           >
             <Image
               alt={alt}
@@ -449,7 +667,9 @@ function ClaudeImageStrip({
           </figure>
         ))}
       </div>
-      <p>Results from the web</p>
+      <p {...revealProps(revealStartIndex + claudeWebResults.length)}>
+        Results from the web
+      </p>
     </div>
   );
 }
@@ -457,131 +677,207 @@ function ClaudeImageStrip({
 function ClaudeRecipeResponse() {
   let revealIndex = 0;
   const nextReveal = () => revealIndex++;
+  const nextRevealRange = (length: number) => {
+    const start = revealIndex;
+    revealIndex += length;
+    return start;
+  };
+  const renderStrongLeadLines = (lead: string, text: string) => (
+    <RecipeLineGroup
+      lines={getStrongLeadLines(lead, text)}
+      revealStartIndex={nextRevealRange(countStrongLeadLines(lead, text))}
+    />
+  );
+  const thinkingRevealStartIndex = nextRevealRange(
+    countRecipeTextLines([claudeThinkingLine]),
+  );
+  const ledeRevealStartIndex = nextRevealRange(
+    countRecipeTextLines([claudeLedeText]),
+  );
+  const recipeCardRevealIndex = nextReveal();
 
   return (
     <article className="recipe-chat-response recipe-chat-response--claude">
-      <p {...revealProps(nextReveal(), "claude-thinking")}>
-        Engineered crispy oven-baked chips balancing flavor, nutrition, and
-        minimal oil <span aria-hidden="true">&rsaquo;</span>
-      </p>
+      <RecipeParagraphs
+        className="claude-thinking"
+        items={[claudeThinkingLine]}
+        revealStartIndex={thinkingRevealStartIndex}
+      />
 
-      <p {...revealProps(nextReveal(), "claude-lede")}>
-        Same shattering crunch, same compulsive umami pull &mdash; but
-        oven-baked with about 1/8th the oil of fried chips. The trick is
-        treating baking like dehydration plus browning: drive out every drop of
-        water first, then let the Maillard reaction do its work. Nutritional
-        yeast becomes the secret weapon here &mdash; it&apos;s loaded with B
-        vitamins and delivers a cheesy-savory hit that masks the fact that
-        you&apos;re eating roughly 80% less fat.
-      </p>
+      <RecipeParagraphs
+        className="claude-lede"
+        items={[claudeLedeText]}
+        revealStartIndex={ledeRevealStartIndex}
+      />
 
-      <section className="claude-recipe-card">
-        <ClaudeImageStrip getRevealIndex={nextReveal} />
+      <section
+        className="claude-recipe-card"
+        style={
+          {
+            "--recipe-reveal-index": recipeCardRevealIndex,
+          } as RevealStyle
+        }
+      >
+        <span
+          aria-hidden="true"
+          {...revealProps(recipeCardRevealIndex, "claude-recipe-card-outline")}
+        />
+        <ClaudeImageStrip
+          revealStartIndex={nextRevealRange(claudeWebResults.length + 1)}
+        />
 
         <h2 {...revealProps(nextReveal())}>Perfect Crispy Baked Potato Chips</h2>
-        <p {...revealProps(nextReveal())}>
-          Oven-baked, skin-on, and seasoned with a B-vitamin-packed umami salt
-          &mdash; all the addictive crunch with a fraction of the oil.
-        </p>
+        <RecipeParagraphs
+          items={[claudeRecipeSummary]}
+          revealStartIndex={nextRevealRange(
+            countRecipeTextLines([claudeRecipeSummary]),
+          )}
+        />
 
-        <div {...revealProps(nextReveal(), "claude-servings-row")}>
-          <span>Servings</span>
-          <strong>4</strong>
-          <button type="button">Get cooking</button>
+        <div className="claude-servings-row">
+          <span {...revealProps(nextReveal())}>Servings</span>
+          <strong {...revealProps(nextReveal())}>4</strong>
+          <button
+            {...revealProps(nextReveal(), "claude-cooking-button")}
+            type="button"
+          >
+            Get cooking
+          </button>
         </div>
 
         <h3 {...revealProps(nextReveal())}>Ingredients</h3>
         <div className="claude-ingredient-list">
-          {claudeIngredients.map((ingredient) => (
-            <p key={ingredient} {...revealProps(nextReveal())}>
-              {ingredient}
-            </p>
-          ))}
+          <RecipeParagraphs
+            items={claudeIngredients}
+            revealStartIndex={nextRevealRange(
+              countRecipeTextLines(claudeIngredients),
+            )}
+          />
         </div>
 
         <h3 {...revealProps(nextReveal())}>Steps</h3>
         <ol className="claude-step-list">
-          {claudeSteps.map((step, index) => (
-            <li key={step.title} {...revealProps(nextReveal())}>
-              <span className="claude-step-number">{index + 1}</span>
-              <p>
-                <strong>{step.title}:</strong> {step.text}
-              </p>
-            </li>
-          ))}
+          {claudeSteps.map((step, index) => {
+            const lead = `${step.title}:`;
+            const lines = getStrongLeadLines(lead, step.text);
+            const lineStartIndex = nextRevealRange(lines.length);
+
+            return (
+              <li key={step.title} {...revealListItemProps(lineStartIndex)}>
+                <span className="claude-step-number">{index + 1}</span>
+                <p className="recipe-response-line-group">
+                  {lines.map((line, lineIndex) => (
+                    <span
+                      key={lineIndex}
+                      {...revealLineProps(lineStartIndex + lineIndex)}
+                    >
+                      {line}
+                    </span>
+                  ))}
+                </p>
+              </li>
+            );
+          })}
         </ol>
 
-        <aside className="claude-notes">
-          <h3 {...revealProps(nextReveal())}>Notes</h3>
-          <p {...revealProps(nextReveal())}>
-            <strong>Why this is genuinely healthier:</strong>
-          </p>
-          <RecipeBulletList
-            getRevealIndex={nextReveal}
-            items={claudeHealthNotes}
-          />
+        {(() => {
+          const notesRevealIndex = nextReveal();
 
-          <p {...revealProps(nextReveal())}>
-            <strong>Sweet potato variation:</strong> Swap in sweet potatoes for
-            extra beta-carotene and fiber. They&apos;re trickier, so drop the
-            oven to 375&deg;F and watch like a hawk after the 10-minute mark.
-          </p>
-          <p {...revealProps(nextReveal())}>
-            <strong>Air fryer method:</strong> Same prep through the
-            oil/seasoning toss. Air fry at 360&deg;F for 8-12 minutes, shaking
-            every 3 minutes, until golden.
-          </p>
-          <p {...revealProps(nextReveal())}>
-            <strong>Microwave method (oil-free!):</strong> Skip the oil
-            entirely. Lay dried slices on parchment, sprinkle with seasoning,
-            and microwave on high for 4-6 minutes, watching closely.
-          </p>
-          <p {...revealProps(nextReveal())}>
-            <strong>Storage:</strong> Cool completely before storing in an
-            airtight container at room temp for up to 3 days. Re-crisp in a
-            300&deg;F oven for 2-3 minutes.
-          </p>
-          <p {...revealProps(nextReveal())}>
-            <strong>Flavor variations</strong> (replace the spice mix):
-          </p>
-          <RecipeBulletList
-            getRevealIndex={nextReveal}
-            items={claudeFlavorNotes}
-          />
-        </aside>
+          return (
+            <aside
+              className="claude-notes"
+              style={
+                {
+                  "--recipe-reveal-index": notesRevealIndex,
+                } as RevealStyle
+              }
+            >
+              <h3 {...revealProps(notesRevealIndex)}>Notes</h3>
+              <RecipeLineGroup
+                lines={[
+                  <strong key="healthy">
+                    Why this is genuinely healthier:
+                  </strong>,
+                ]}
+                revealStartIndex={nextRevealRange(1)}
+              />
+              <RecipeBulletList
+                items={claudeHealthNotes}
+                revealStartIndex={nextRevealRange(
+                  countRecipeTextLines(claudeHealthNotes),
+                )}
+              />
+
+              {renderStrongLeadLines(
+                "Sweet potato variation:",
+                "Swap in sweet potatoes for extra beta-carotene and fiber. They're trickier, so drop the oven to 375\u00b0F and watch like a hawk after the 10-minute mark.",
+              )}
+              {renderStrongLeadLines(
+                "Air fryer method:",
+                "Same prep through the oil/seasoning toss. Air fry at 360\u00b0F for 8-12 minutes, shaking every 3 minutes, until golden.",
+              )}
+              {renderStrongLeadLines(
+                "Microwave method (oil-free!):",
+                "Skip the oil entirely. Lay dried slices on parchment, sprinkle with seasoning, and microwave on high for 4-6 minutes, watching closely.",
+              )}
+              {renderStrongLeadLines(
+                "Storage:",
+                "Cool completely before storing in an airtight container at room temp for up to 3 days. Re-crisp in a 300\u00b0F oven for 2-3 minutes.",
+              )}
+              <RecipeLineGroup
+                lines={[
+                  <>
+                    <strong>Flavor variations</strong> (replace the spice mix):
+                  </>,
+                ]}
+                revealStartIndex={nextRevealRange(1)}
+              />
+              <RecipeBulletList
+                items={claudeFlavorNotes}
+                revealStartIndex={nextRevealRange(
+                  countRecipeTextLines(claudeFlavorNotes),
+                )}
+              />
+            </aside>
+          );
+        })()}
       </section>
 
       <section className="claude-honest-take">
-        <h2 {...revealProps(nextReveal())}>
-          The honest take on what makes this &quot;healthy but still addictive&quot;:
-        </h2>
+        <RecipeParagraphs
+          className="claude-honest-take-title"
+          items={[claudeHonestTakeIntro]}
+          revealStartIndex={nextRevealRange(
+            countRecipeTextLines([claudeHonestTakeIntro]),
+          )}
+        />
         <ol>
-          <li {...revealProps(nextReveal())}>
-            <strong>Nutritional yeast does heavy lifting.</strong> It hits the
-            same cheese-and-umami receptors that fried fat does, but adds B
-            vitamins and a bit of protein and fiber.
-          </li>
-          <li {...revealProps(nextReveal())}>
-            <strong>Oil quantity, not type, is the main health lever.</strong>{" "}
-            Going from 1 cup of absorbed oil to 1 tablespoon is roughly 800
-            fewer fat calories per batch.
-          </li>
-          <li {...revealProps(nextReveal())}>
-            <strong>Skin on, always.</strong> Most of a potato&apos;s nutrients
-            are in or just under the skin.
-          </li>
-          <li {...revealProps(nextReveal())}>
-            <strong>The cooling crisp.</strong> Baked chips come out of the oven
-            slightly soft and finish crisping as they cool.
-          </li>
+          {claudeHonestTakeItems.map((item) => {
+            const lines = getStrongLeadLines(item.lead, item.text);
+            const lineStartIndex = nextRevealRange(lines.length);
+
+            return (
+              <li key={item.lead} {...revealListItemProps(lineStartIndex)}>
+                <p className="recipe-response-line-group">
+                  {lines.map((line, lineIndex) => (
+                    <span
+                      key={lineIndex}
+                      {...revealLineProps(lineStartIndex + lineIndex)}
+                    >
+                      {line}
+                    </span>
+                  ))}
+                </p>
+              </li>
+            );
+          })}
         </ol>
-        <p {...revealProps(nextReveal())}>
-          If you want the absolute most addictive version of this recipe, the
-          air fryer at 360&deg;F gets you closest to fried texture because the
-          high-velocity airflow crisps surfaces faster than a still oven. The
-          microwave method is the surprise sleeper hit for solo snacking &mdash;
-          zero oil, four minutes, genuinely good.
-        </p>
+        <RecipeParagraphs
+          items={[claudeHonestTakeOutro]}
+          revealStartIndex={nextRevealRange(
+            countRecipeTextLines([claudeHonestTakeOutro]),
+          )}
+        />
       </section>
     </article>
   );
@@ -590,6 +886,11 @@ function ClaudeRecipeResponse() {
 function GeminiRecipeResponse() {
   let revealIndex = 0;
   const nextReveal = () => revealIndex++;
+  const nextRevealRange = (length: number) => {
+    const start = revealIndex;
+    revealIndex += length;
+    return start;
+  };
 
   return (
     <article className="recipe-chat-response recipe-chat-response--gemini">
@@ -598,7 +899,13 @@ function GeminiRecipeResponse() {
           ✦
         </span>
         <span>Show thinking</span>
-        <span aria-hidden="true">⌄</span>
+        <svg
+          className="gemini-thinking__chevron"
+          aria-hidden="true"
+          viewBox="0 0 16 16"
+        >
+          <path d="M4.5 6.25 8 9.75l3.5-3.5" />
+        </svg>
       </div>
 
       <p {...revealProps(nextReveal())}>
@@ -631,8 +938,10 @@ function GeminiRecipeResponse() {
       <h3 {...revealProps(nextReveal())}>🥔 The Ingredients</h3>
       <h4 {...revealProps(nextReveal())}>The Chips:</h4>
       <RecipeBulletList
-        getRevealIndex={nextReveal}
         items={geminiChipIngredients}
+        revealStartIndex={nextRevealRange(
+          countRecipeTextLines(geminiChipIngredients),
+        )}
       />
 
       <h4 {...revealProps(nextReveal())}>
@@ -645,8 +954,10 @@ function GeminiRecipeResponse() {
         cheddar-like flavor.
       </p>
       <RecipeBulletList
-        getRevealIndex={nextReveal}
         items={geminiSeasoningIngredients}
+        revealStartIndex={nextRevealRange(
+          countRecipeTextLines(geminiSeasoningIngredients),
+        )}
       />
 
       <h3 {...revealProps(nextReveal())}>🍳 Step-by-Step Instructions</h3>
@@ -732,10 +1043,36 @@ function GeminiRecipeResponse() {
 export function RecipeChatTranscript() {
   const [selectedModel, setSelectedModel] = useState<RecipeModel>("gpt");
   const [hasEnteredViewport, setHasEnteredViewport] = useState(false);
+  const [revealedModels, setRevealedModels] = useState<RecipeModel[]>([]);
+  const revealCompletionTimerRef = useRef<ReturnType<
+    typeof globalThis.setTimeout
+  > | null>(null);
   const transcriptRef = useRef<HTMLDivElement>(null);
   const selectedModelLabel = modelOptions.find(
     (option) => option.id === selectedModel,
   )?.label;
+  const hasRevealedSelectedModel = revealedModels.includes(selectedModel);
+  const shouldRevealSelectedModel =
+    hasEnteredViewport && !hasRevealedSelectedModel;
+
+  const markModelRevealed = useCallback((model: RecipeModel) => {
+    setRevealedModels((currentModels) => {
+      if (currentModels.includes(model)) {
+        return currentModels;
+      }
+
+      return [...currentModels, model];
+    });
+  }, []);
+
+  const clearRevealCompletionTimer = useCallback(() => {
+    if (revealCompletionTimerRef.current === null) {
+      return;
+    }
+
+    globalThis.clearTimeout(revealCompletionTimerRef.current);
+    revealCompletionTimerRef.current = null;
+  }, []);
 
   useEffect(() => {
     const node = transcriptRef.current;
@@ -765,8 +1102,8 @@ export function RecipeChatTranscript() {
         }
       },
       {
-        rootMargin: "0px 0px -12% 0px",
-        threshold: 0.22,
+        rootMargin: "0px 0px 28% 0px",
+        threshold: 0.04,
       },
     );
 
@@ -777,22 +1114,79 @@ export function RecipeChatTranscript() {
     };
   }, []);
 
+  useEffect(() => {
+    clearRevealCompletionTimer();
+
+    if (!shouldRevealSelectedModel) {
+      return;
+    }
+
+    const reducedMotionQuery = globalThis.matchMedia?.(
+      "(prefers-reduced-motion: reduce)",
+    );
+
+    if (reducedMotionQuery?.matches) {
+      revealCompletionTimerRef.current = globalThis.setTimeout(() => {
+        revealCompletionTimerRef.current = null;
+        markModelRevealed(selectedModel);
+      }, 0);
+      return;
+    }
+
+    const node = transcriptRef.current;
+    const revealCompletionDelay =
+      node === null ? 0 : getRevealCompletionDelay(node);
+    const modelBeingRevealed = selectedModel;
+    revealCompletionTimerRef.current = globalThis.setTimeout(() => {
+      revealCompletionTimerRef.current = null;
+      markModelRevealed(modelBeingRevealed);
+    }, revealCompletionDelay);
+
+    return () => {
+      clearRevealCompletionTimer();
+    };
+  }, [
+    clearRevealCompletionTimer,
+    markModelRevealed,
+    selectedModel,
+    shouldRevealSelectedModel,
+  ]);
+
+  useLayoutEffect(() => {
+    const node = transcriptRef.current;
+
+    if (!node || selectedModel !== "claude") {
+      return;
+    }
+
+    const updateClaudeCardGrowth = () => {
+      setClaudeCardGrowthMetrics(node);
+    };
+
+    updateClaudeCardGrowth();
+    globalThis.addEventListener("resize", updateClaudeCardGrowth);
+
+    return () => {
+      globalThis.removeEventListener("resize", updateClaudeCardGrowth);
+    };
+  }, [hasRevealedSelectedModel, selectedModel, shouldRevealSelectedModel]);
+
   return (
     <div
       className={`recipe-chat-transcript recipe-chat-transcript--${selectedModel}${
-        hasEnteredViewport ? " is-revealing" : ""
+        shouldRevealSelectedModel ? " is-revealing" : ""
+      }${
+        hasEnteredViewport && hasRevealedSelectedModel ? " has-revealed" : ""
       }`}
       aria-label={`${selectedModelLabel} potato chips recipe conversation`}
       ref={transcriptRef}
     >
       <div
         aria-label="Select recipe model"
-        className="recipe-model-toggle"
+        className={`recipe-model-toggle recipe-model-toggle--${selectedModel}`}
         role="tablist"
       >
         {modelOptions.map((option) => {
-          const Icon = option.Icon;
-
           return (
             <button
               aria-selected={selectedModel === option.id}
@@ -804,7 +1198,14 @@ export function RecipeChatTranscript() {
               role="tab"
               type="button"
             >
-              <Icon />
+              <Image
+                alt=""
+                aria-hidden="true"
+                className={`recipe-model-toggle__icon recipe-model-toggle__icon--${option.id}`}
+                height={18}
+                src={option.icon}
+                width={18}
+              />
               <span>{option.label}</span>
             </button>
           );
