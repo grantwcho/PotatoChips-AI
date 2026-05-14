@@ -15,6 +15,7 @@ export function MarketingNavShell() {
   const mobileMenuMutedClass = "text-white/[0.54]";
   const menuButtonToneClass = "text-white";
   const navItems = [
+    { href: "/preorder", label: "Pre-order" },
     { href: "/contact", label: "Contact Us" },
   ];
   const [isFloating, setIsFloating] = useState(false);
@@ -161,7 +162,10 @@ export function MarketingNavShell() {
                 />
               </Link>
 
-              <div className="hidden items-center justify-end gap-4 text-sm md:flex">
+              <div className="hidden items-center justify-end gap-6 text-sm md:flex">
+                <Link href="/preorder" className="marketing-nav-link">
+                  Pre-order
+                </Link>
                 <Link href="/contact" className="marketing-nav-link">
                   Contact Us
                 </Link>

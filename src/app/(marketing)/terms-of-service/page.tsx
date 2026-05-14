@@ -33,7 +33,7 @@ const sections = [
         <p>
           The site is provided for brand storytelling, product information,
           recipe development, packaging experiments, customer communications,
-          promotions, and any order or preorder experiences we choose to make
+          promotions, and any order or pre-order experiences we choose to make
           available. You may use the site only in compliance with applicable law
           and these terms.
         </p>
@@ -66,11 +66,11 @@ const sections = [
     ),
   },
   {
-    title: "Purchases, Preorders, and Promotions",
+    title: "Purchases, Pre-orders, and Promotions",
     body: (
       <>
         <p>
-          If the site allows purchases, preorders, samples, giveaways, or other
+          If the site allows purchases, pre-orders, samples, giveaways, or other
           promotions, additional terms may apply, including checkout terms,
           shipping terms, refund or return policies, eligibility rules, and
           promotional deadlines. Those specific terms control for that

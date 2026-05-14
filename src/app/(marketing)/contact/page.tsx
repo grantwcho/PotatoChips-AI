@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
 import type { CSSProperties } from "react";
+import { CharacterTextReveal } from "@/components/character-text-reveal";
 
 export const metadata: Metadata = {
   title: "Contact",
   description:
     "Reach Potato Chips AI for media and general inquiries.",
 };
+
+const CONTACT_TITLE_REVEAL_SPEED = 0.5;
 
 export default function ContactPage() {
   return (
@@ -15,7 +18,11 @@ export default function ContactPage() {
     >
       <div className="marketing-contact-shell" style={contactShellStyle}>
         <h1 className="marketing-contact-title" style={contactTitleStyle}>
-          Contact
+          <CharacterTextReveal
+            characterSpeed={CONTACT_TITLE_REVEAL_SPEED}
+            lineSpeed={CONTACT_TITLE_REVEAL_SPEED}
+            text="Contact"
+          />
         </h1>
 
         <p className="marketing-contact-intro" style={contactIntroStyle}>
@@ -50,22 +57,23 @@ const contactShellStyle = {
 
 const contactTitleStyle = {
   color: "#000000",
-  fontFamily: "var(--font-google-sans), system-ui, sans-serif",
-  fontSize: "clamp(4rem, 5vw, 6.35rem)",
-  fontWeight: 700,
-  letterSpacing: "-0.07em",
+  fontFamily: "var(--font-display), var(--font-sans), system-ui, sans-serif",
+  fontSize: "clamp(2.45rem, 5.3vw, 4.55rem)",
+  fontWeight: 400,
+  letterSpacing: "-0.05em",
   lineHeight: 0.95,
   margin: 0,
 } satisfies CSSProperties;
 
 const contactIntroStyle = {
   color: "#000000",
-  fontSize: "clamp(1.32rem, 1.55vw, 1.85rem)",
-  fontWeight: 700,
-  letterSpacing: "-0.045em",
-  lineHeight: 1.18,
+  fontFamily: "var(--font-display), var(--font-sans), system-ui, sans-serif",
+  fontSize: "clamp(1.85rem, 2.35vw, 2.75rem)",
+  fontWeight: 400,
+  letterSpacing: "-0.04em",
+  lineHeight: 0.98,
   margin: "clamp(3rem, 5vw, 4.4rem) 0 0",
-  maxWidth: "38rem",
+  maxWidth: "54rem",
 } satisfies CSSProperties;
 
 const contactCopyStyle = {

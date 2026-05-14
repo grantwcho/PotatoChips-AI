@@ -16,7 +16,7 @@ const sections = [
         <p>
           This Privacy Policy describes how Potato Chips AI collects and uses
           information through our public website, contact forms, product pages,
-          promotions, recipe development, order or preorder flows, and related
+          promotions, recipe development, order or pre-order flows, and related
           communications. It applies to information you provide directly to us,
           information we collect automatically when you use the site, and
           information we receive from service providers that help us run the
@@ -44,7 +44,7 @@ const sections = [
             content;
           </li>
           <li>
-            order, preorder, giveaway, or sampling details, such as products
+            order, pre-order, giveaway, or sampling details, such as products
             selected, shipping information, delivery preferences, and customer
             service history;
           </li>
@@ -72,7 +72,7 @@ const sections = [
         <ul className="list-disc space-y-3 pl-6">
           <li>respond to customer, retail, wholesale, press, and general inquiries;</li>
           <li>
-            process, fulfill, support, or troubleshoot purchases, preorders,
+            process, fulfill, support, or troubleshoot purchases, pre-orders,
             samples, giveaways, and product-related requests;
           </li>
           <li>

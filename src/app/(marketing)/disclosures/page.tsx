@@ -77,7 +77,7 @@ const sections = [
     body: (
       <>
         <p>
-          Product launches, purchases, preorders, samples, giveaways, discounts,
+          Product launches, purchases, pre-orders, samples, giveaways, discounts,
           and promotions may be subject to additional terms, eligibility rules,
           shipping limits, deadlines, refund policies, or availability
           constraints. Specific terms for a transaction or promotion control

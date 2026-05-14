@@ -10,9 +10,6 @@ import {
   type CSSProperties,
   type ReactNode,
 } from "react";
-import claudeLogoIcon from "../../assets/icons/claude_logo.png";
-import geminiLogoIcon from "../../assets/icons/gemini_logo.png";
-import openAiLogoIcon from "../../assets/icons/openai_logo.png";
 import claudeChip55Recipes from "../../assets/images/claude-chip-55recipes.webp";
 import claudeChipInspired from "../../assets/images/claude-chip-inspired.jpg";
 import claudeChipMummyrecipes from "../../assets/images/claude-chip-mummyrecipes.jpg";
@@ -23,6 +20,7 @@ const REVEAL_INITIAL_DELAY_MS = 700;
 const REVEAL_STAGGER_MS = 140;
 const REVEAL_LINE_DURATION_MS = 720;
 const REVEAL_COMPLETION_BUFFER_MS = 650;
+const RECIPE_LINE_MAX_LENGTH = 104;
 
 type RecipeModel = "gpt" | "claude" | "gemini";
 
@@ -52,13 +50,12 @@ const claudeWebResults = [
 ] satisfies Array<{ alt: string; label: string; src: StaticImageData }>;
 
 const modelOptions: Array<{
-  icon: StaticImageData;
   id: RecipeModel;
   label: string;
 }> = [
-  { icon: openAiLogoIcon, id: "gpt", label: "GPT-5.5 Pro" },
-  { icon: claudeLogoIcon, id: "claude", label: "Opus 4.7 Adaptive" },
-  { icon: geminiLogoIcon, id: "gemini", label: "Gemini 3.1 Pro" },
+  { id: "gpt", label: "GPT-5.5 Pro" },
+  { id: "claude", label: "Opus 4.7 Adaptive" },
+  { id: "gemini", label: "Gemini 3.1 Pro" },
 ];
 
 const chipsIngredients = [
@@ -363,7 +360,6 @@ function getRevealCompletionDelay(node: HTMLElement) {
 }
 
 function splitRecipeTextIntoLines(text: string) {
-  const maxLineLength = 74;
   const words = text.trim().split(/\s+/);
   const lines: string[] = [];
   let currentLine = "";
@@ -371,7 +367,7 @@ function splitRecipeTextIntoLines(text: string) {
   for (const word of words) {
     const candidate = currentLine ? `${currentLine} ${word}` : word;
 
-    if (candidate.length > maxLineLength && currentLine) {
+    if (candidate.length > RECIPE_LINE_MAX_LENGTH && currentLine) {
       lines.push(currentLine);
       currentLine = word;
     } else {
@@ -1041,7 +1037,7 @@ function GeminiRecipeResponse() {
 }
 
 export function RecipeChatTranscript() {
-  const [selectedModel, setSelectedModel] = useState<RecipeModel>("gpt");
+  const [selectedModel] = useState<RecipeModel>("claude");
   const [hasEnteredViewport, setHasEnteredViewport] = useState(false);
   const [revealedModels, setRevealedModels] = useState<RecipeModel[]>([]);
   const revealCompletionTimerRef = useRef<ReturnType<
@@ -1050,7 +1046,7 @@ export function RecipeChatTranscript() {
   const transcriptRef = useRef<HTMLDivElement>(null);
   const selectedModelLabel = modelOptions.find(
     (option) => option.id === selectedModel,
-  )?.label;
+  )?.label ?? "Opus 4.7 Adaptive";
   const hasRevealedSelectedModel = revealedModels.includes(selectedModel);
   const shouldRevealSelectedModel =
     hasEnteredViewport && !hasRevealedSelectedModel;
@@ -1181,36 +1177,9 @@ export function RecipeChatTranscript() {
       aria-label={`${selectedModelLabel} potato chips recipe conversation`}
       ref={transcriptRef}
     >
-      <div
-        aria-label="Select recipe model"
-        className={`recipe-model-toggle recipe-model-toggle--${selectedModel}`}
-        role="tablist"
-      >
-        {modelOptions.map((option) => {
-          return (
-            <button
-              aria-selected={selectedModel === option.id}
-              className={`recipe-model-toggle__option${
-                selectedModel === option.id ? " is-active" : ""
-              }`}
-              key={option.id}
-              onClick={() => setSelectedModel(option.id)}
-              role="tab"
-              type="button"
-            >
-              <Image
-                alt=""
-                aria-hidden="true"
-                className={`recipe-model-toggle__icon recipe-model-toggle__icon--${option.id}`}
-                height={18}
-                src={option.icon}
-                width={18}
-              />
-              <span>{option.label}</span>
-            </button>
-          );
-        })}
-      </div>
+      <h2 className="mb-[clamp(1.75rem,3vw,2.5rem)] text-center font-sans text-[clamp(2.2rem,4vw,4.35rem)] font-light leading-[1.02] tracking-[-0.04em] text-black">
+        Our Heartwarming Story.
+      </h2>
 
       <div className="recipe-chat-prompt-row">
         <p

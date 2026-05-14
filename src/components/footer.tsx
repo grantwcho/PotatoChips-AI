@@ -24,6 +24,9 @@ export function Footer() {
                   Actions
                 </p>
                 <div className="flex flex-col items-start gap-4 text-sm">
+                  <Link href="/preorder" className="marketing-nav-link">
+                    Pre-order
+                  </Link>
                   <Link href="/contact" className="marketing-nav-link">
                     Contact Us
                   </Link>

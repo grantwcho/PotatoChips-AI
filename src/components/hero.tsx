@@ -1,7 +1,4 @@
 import Image from "next/image";
-import gptBagDemo from "../../assets/images/GPT_Bag_Demo.png";
-import opusBagDemo from "../../assets/images/Opus_Bag_Demo.png";
-import geminiBagDemo from "../../assets/images/Gemini_Bag_Demo.png";
 import taiwanImage from "../../assets/images/taiwan.png";
 import { HeroCopyReveal } from "./hero-copy-reveal";
 import { MarketDebateShowcase } from "./market-debate-showcase";
@@ -9,38 +6,6 @@ import { OrthogonalitySectionFrame } from "./orthogonality-section-frame";
 import { RecipeChatTranscript } from "./recipe-chat-transcript";
 import { ScrollExpandingCard } from "./scroll-expanding-card";
 import { STOCK_COVERAGE_ENABLED } from "@/lib/stocks/coverage-data";
-
-function ChipBagScene() {
-  return (
-    <div
-      className="chips-hero-scene marketing-fade-up marketing-fade-up-delay-1"
-      aria-label="Three Potato Chips AI bags."
-      role="img"
-    >
-      <Image
-        src={gptBagDemo}
-        alt="Potato Chips AI bag with chips on the front."
-        className="chips-hero-bag"
-        priority
-        sizes="(max-width: 768px) 28vw, 224px"
-      />
-      <Image
-        src={opusBagDemo}
-        alt="Potato Chips AI bag with Claude Opus recipe artwork on the front."
-        className="chips-hero-bag"
-        priority
-        sizes="(max-width: 768px) 28vw, 224px"
-      />
-      <Image
-        src={geminiBagDemo}
-        alt="Potato Chips AI bag with Gemini recipe artwork on the front."
-        className="chips-hero-bag"
-        priority
-        sizes="(max-width: 768px) 28vw, 224px"
-      />
-    </div>
-  );
-}
 
 function TaiwanImageGraphic() {
   return (
@@ -117,18 +82,23 @@ export function Hero() {
   return (
     <>
       <div className="bg-background text-foreground">
-        <section className="flex pb-12 pt-24 sm:pb-14 lg:pb-16 lg:pt-28">
-          <div className="marketing-container flex w-full flex-1 flex-col justify-center">
-            <div className="marketing-rail shrink-0">
-              <div className="relative z-20 isolate">
-                <HeroCopyReveal />
-              </div>
-            </div>
+        <section className="marketing-home-video-hero">
+          <div className="marketing-home-video-hero__frame" aria-hidden="true">
+            <video
+              autoPlay
+              className="marketing-home-video-hero__video"
+              loop
+              muted
+              playsInline
+              preload="metadata"
+            >
+              <source src="/videos/merged.mp4" type="video/mp4" />
+            </video>
+          </div>
 
-            <div className="relative mt-8 flex justify-center lg:mt-8">
-              <div className="marketing-rail flex justify-center">
-                <ChipBagScene />
-              </div>
+          <div className="marketing-container marketing-home-video-hero__container">
+            <div className="marketing-rail marketing-home-video-hero__rail">
+              <HeroCopyReveal />
             </div>
           </div>
         </section>
