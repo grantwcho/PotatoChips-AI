@@ -11,7 +11,7 @@ import {
 } from "./character-text-reveal-utils";
 
 const HERO_HEADLINE_SEGMENTS: CharacterTextSegment[] = [
-  "The chips Nvidia would've never thought to make.",
+  "The chips Nvidia would never dare create.",
 ];
 const HERO_BODY_SEGMENTS: CharacterTextSegment[] = [
   "Generations of LLMs and data centers in space have ",

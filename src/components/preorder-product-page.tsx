@@ -3,9 +3,10 @@
 import Image from "next/image";
 import gptBagDemo from "../../assets/images/GPT_Bag_Demo.png";
 import { Button } from "./button";
+import { CharacterTextReveal } from "./character-text-reveal";
 
-const PREORDER_EMAIL =
-  "mailto:press@potatochips.ai?subject=Potato%20Chips%20AI%20Pre-order";
+const PREORDER_CART_URL =
+  "https://potatochipsai.myshopify.com/cart/53229203620203:1";
 const CHIPS_AI_PRICE = "$11.99";
 const QUANTITY_OPTIONS = Array.from({ length: 30 }, (_, index) => index + 1);
 
@@ -16,7 +17,7 @@ export function PreorderProductPage() {
         <div className="marketing-rail grid gap-12 lg:grid-cols-[minmax(22rem,0.45fr)_minmax(28rem,0.55fr)] lg:items-start lg:gap-16">
           <div className="max-w-[42rem]">
             <h1 className="max-w-5xl font-display text-[clamp(2.45rem,5.3vw,4.55rem)] font-normal leading-[0.95] tracking-[-0.05em] text-balance text-black">
-              Chips AI
+              <CharacterTextReveal text="Chips AI" />
             </h1>
             <p
               aria-live="polite"
@@ -62,7 +63,7 @@ export function PreorderProductPage() {
 
             <div className="marketing-fade-up marketing-fade-up-delay-1 relative z-30 mt-8 w-full max-w-[20rem] pointer-events-auto sm:max-w-sm">
               <Button
-                href={PREORDER_EMAIL}
+                href={PREORDER_CART_URL}
                 className="marketing-hero-button relative z-30 min-w-0 w-full"
               >
                 Pre-order Now
@@ -70,7 +71,7 @@ export function PreorderProductPage() {
             </div>
           </div>
 
-          <div className="relative flex min-h-[34rem] items-center justify-center overflow-hidden rounded-[8px] bg-white px-6 py-10 shadow-[0_1.6rem_4rem_rgba(0,0,0,0.08)] sm:min-h-[42rem] lg:min-h-[50rem]">
+          <div className="relative flex min-h-[34rem] items-center justify-center overflow-hidden rounded-[15px] bg-[#f5f5f5] px-6 py-10 shadow-[0_1.6rem_4rem_rgba(0,0,0,0.08)] sm:min-h-[42rem] lg:min-h-[50rem]">
             <div
               className="absolute inset-x-12 bottom-16 h-16 bg-black/10 blur-2xl"
               aria-hidden="true"
