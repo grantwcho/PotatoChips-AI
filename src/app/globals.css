@@ -703,6 +703,21 @@ h1, h2, h3, h4, h5, h6 {
   opacity: 0;
 }
 
+.marketing-character-reveal__static-layer {
+  display: block;
+}
+
+.marketing-character-reveal--static .marketing-character-reveal__measure-layer {
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+}
+
+.marketing-character-reveal--static .marketing-character-reveal__line-layer {
+  display: none;
+}
+
 .marketing-character-reveal--paused .marketing-character-reveal__char,
 .marketing-character-reveal--paused .marketing-character-reveal__line {
   animation-play-state: paused;
@@ -955,7 +970,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .marketing-site .marketing-scroll-card-stage--taiwan {
-  background: #ffffff !important;
+  background: #f9f9f7 !important;
   z-index: 20;
   margin-top: clamp(-3.5rem, -4vw, -2rem);
   padding-top: 0 !important;

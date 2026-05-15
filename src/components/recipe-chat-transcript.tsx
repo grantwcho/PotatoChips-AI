@@ -20,7 +20,6 @@ const REVEAL_INITIAL_DELAY_MS = 700;
 const REVEAL_STAGGER_MS = 140;
 const REVEAL_LINE_DURATION_MS = 720;
 const REVEAL_COMPLETION_BUFFER_MS = 650;
-const RECIPE_LINE_MAX_LENGTH = 104;
 
 type RecipeModel = "gpt" | "claude" | "gemini";
 
@@ -360,26 +359,7 @@ function getRevealCompletionDelay(node: HTMLElement) {
 }
 
 function splitRecipeTextIntoLines(text: string) {
-  const words = text.trim().split(/\s+/);
-  const lines: string[] = [];
-  let currentLine = "";
-
-  for (const word of words) {
-    const candidate = currentLine ? `${currentLine} ${word}` : word;
-
-    if (candidate.length > RECIPE_LINE_MAX_LENGTH && currentLine) {
-      lines.push(currentLine);
-      currentLine = word;
-    } else {
-      currentLine = candidate;
-    }
-  }
-
-  if (currentLine) {
-    lines.push(currentLine);
-  }
-
-  return lines;
+  return [text.trim()];
 }
 
 function countRecipeTextLines(items: string[]) {

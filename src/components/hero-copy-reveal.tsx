@@ -11,7 +11,7 @@ import {
 } from "./character-text-reveal-utils";
 
 const HERO_HEADLINE_SEGMENTS: CharacterTextSegment[] = [
-  "The chips Nvidia would never dare create.",
+  "The chips Nvidia wouldn't dare create.",
 ];
 const HERO_BODY_SEGMENTS: CharacterTextSegment[] = [
   "Generations of LLMs and data centers in space have ",
@@ -61,7 +61,7 @@ export function HeroCopyReveal() {
 
   return (
     <div className="mx-auto w-full max-w-[88rem] text-center">
-      <h1 className="font-google-sans mx-auto w-full max-w-[22rem] text-[1.95rem] font-semibold leading-[0.98] tracking-normal sm:max-w-[68rem] sm:text-[3.1rem] lg:max-w-[76rem] lg:text-[3.35rem] xl:max-w-[82rem] xl:text-[3.95rem] 2xl:max-w-[88rem] 2xl:text-[4.6rem]">
+      <h1 className="font-google-sans mx-auto w-full max-w-[22rem] text-[1.8rem] font-normal leading-[0.98] tracking-normal sm:max-w-[68rem] sm:text-[2.9rem] lg:max-w-[76rem] lg:text-[3.15rem] xl:max-w-[82rem] xl:text-[3.65rem] 2xl:max-w-[88rem] 2xl:text-[4.25rem]">
         <CharacterTextReveal
           characterSpeed={HERO_HEADLINE_REVEAL_SPEED}
           lineSpeed={HERO_HEADLINE_REVEAL_SPEED}

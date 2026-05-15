@@ -176,6 +176,7 @@ export function CharacterTextReveal({
     return new Map(words.map((word) => [word.id, word]));
   }, [words]);
   const [lines, setLines] = useState<RevealLine[]>([]);
+  const [settledRevealKey, setSettledRevealKey] = useState<string | null>(null);
 
   const measureLines = useCallback(() => {
     const measureElement = measureRef.current;
@@ -268,13 +269,6 @@ export function CharacterTextReveal({
     };
   }, [measureLines]);
 
-  const rootClassName = [
-    "marketing-character-reveal",
-    !active ? "marketing-character-reveal--paused" : undefined,
-    className,
-  ]
-    .filter(Boolean)
-    .join(" ");
   const characterStaggerMs = durationForSpeed(
     CHARACTER_REVEAL_STAGGER_MS,
     characterSpeed,
@@ -342,6 +336,24 @@ export function CharacterTextReveal({
       return Math.max(completeMs, lineCompleteMs);
     }, 0);
   }, [characterDurationMs, characterStaggerMs, scheduledLines]);
+  const visualCompleteMs = useMemo(() => {
+    if (revealCompleteMs === null) {
+      return null;
+    }
+
+    const lineSettleCompleteMs = scheduledLines.reduce((completeMs, line) => {
+      return Math.max(completeMs, line.revealDelayMs + lineDurationMs);
+    }, 0);
+
+    return Math.max(revealCompleteMs, lineSettleCompleteMs);
+  }, [lineDurationMs, revealCompleteMs, scheduledLines]);
+  const revealInstanceKey = [
+    accessibleText,
+    characterSpeed,
+    delayMs,
+    lineSpeed,
+    visualCompleteMs ?? "pending",
+  ].join("|");
 
   useEffect(() => {
     if (revealCompleteMs === null) {
@@ -351,6 +363,39 @@ export function CharacterTextReveal({
     onRevealCompleteMsChange?.(revealCompleteMs);
   }, [onRevealCompleteMsChange, revealCompleteMs]);
 
+  useEffect(() => {
+    if (!active || visualCompleteMs === null) {
+      return;
+    }
+
+    const settleTimer = window.setTimeout(() => {
+      setSettledRevealKey(revealInstanceKey);
+    }, visualCompleteMs);
+    const handlePageShow = (event: PageTransitionEvent) => {
+      if (event.persisted) {
+        setSettledRevealKey(revealInstanceKey);
+      }
+    };
+
+    window.addEventListener("pageshow", handlePageShow);
+
+    return () => {
+      window.clearTimeout(settleTimer);
+      window.removeEventListener("pageshow", handlePageShow);
+    };
+  }, [active, revealInstanceKey, visualCompleteMs]);
+
+  const hasSettled = settledRevealKey === revealInstanceKey;
+  const shouldShowStaticText = active && (lines.length === 0 || hasSettled);
+  const rootClassName = [
+    "marketing-character-reveal",
+    shouldShowStaticText ? "marketing-character-reveal--static" : undefined,
+    !active ? "marketing-character-reveal--paused" : undefined,
+    className,
+  ]
+    .filter(Boolean)
+    .join(" ");
+
   return (
     <span
       aria-label={accessibleText}
@@ -358,6 +403,27 @@ export function CharacterTextReveal({
       ref={rootRef}
       role="text"
     >
+      {shouldShowStaticText ? (
+        <span
+          aria-hidden="true"
+          className="marketing-character-reveal__static-layer"
+        >
+          {normalizedSegments.map((segment, index) => {
+            const textContent = segmentText(segment);
+            const segmentClass = segmentClassName(segment);
+
+            if (segmentClass) {
+              return (
+                <span className={segmentClass} key={index}>
+                  {textContent}
+                </span>
+              );
+            }
+
+            return <Fragment key={index}>{textContent}</Fragment>;
+          })}
+        </span>
+      ) : null}
       <span
         aria-hidden="true"
         className="marketing-character-reveal__measure-layer"

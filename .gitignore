@@ -24,7 +24,7 @@ coverage/
 *.db
 *.sqlite
 *.sqlite3
-storage/
+/storage/
 
 # Generated Prisma clients are recreated by npm postinstall.
 src/generated/
