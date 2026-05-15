@@ -90,7 +90,8 @@ export function Hero() {
               loop
               muted
               playsInline
-              preload="metadata"
+              poster="/videos/merged-poster.jpg"
+              preload="auto"
             >
               <source src="/videos/merged.mp4" type="video/mp4" />
             </video>

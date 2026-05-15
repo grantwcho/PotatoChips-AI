@@ -71,7 +71,7 @@ const contactIntroStyle = {
   fontSize: "clamp(1.85rem, 2.35vw, 2.75rem)",
   fontWeight: 400,
   letterSpacing: "-0.04em",
-  lineHeight: 0.98,
+  lineHeight: 1.5625,
   margin: "clamp(3rem, 5vw, 4.4rem) 0 0",
   maxWidth: "54rem",
 } satisfies CSSProperties;

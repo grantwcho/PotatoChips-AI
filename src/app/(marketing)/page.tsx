@@ -9,8 +9,22 @@ export const viewport: Viewport = {
 
 export default function Home() {
   return (
-    <div className="marketing-page-home">
-      <Hero />
-    </div>
+    <>
+      <link
+        as="image"
+        fetchPriority="high"
+        href="/videos/merged-poster.jpg"
+        rel="preload"
+      />
+      <link
+        as="video"
+        href="/videos/merged.mp4"
+        rel="preload"
+        type="video/mp4"
+      />
+      <div className="marketing-page-home">
+        <Hero />
+      </div>
+    </>
   );
 }
