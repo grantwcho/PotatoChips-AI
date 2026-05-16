@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist_Mono } from "next/font/google";
 import localFont from "next/font/local";
+import iconBlackSquare from "../../assets/logos/icon_black_square.png";
 import "./globals.css";
 
 const googleSans = localFont({
@@ -26,19 +27,26 @@ const geistMono = Geist_Mono({
   display: "swap",
 });
 
+const SITE_TITLE =
+  "World Leader in Artificial Intelligence Potato Chips | Potato Chips AI";
+
 export const metadata: Metadata = {
   title: {
-    default: "Potato Chips AI - Taste the AI",
+    default: SITE_TITLE,
     template: "%s | Potato Chips AI",
   },
   icons: {
-    icon: [{ url: "/potato-chips-ai-icon.svg", type: "image/svg+xml" }],
-    shortcut: ["/potato-chips-ai-icon.svg"],
-    apple: [{ url: "/potato-chips-ai-icon.svg", type: "image/svg+xml" }],
+    icon: [
+      { url: iconBlackSquare.src, sizes: "5196x5196", type: "image/png" },
+    ],
+    shortcut: [iconBlackSquare.src],
+    apple: [
+      { url: iconBlackSquare.src, sizes: "5196x5196", type: "image/png" },
+    ],
   },
   description: "A platform for autonomous research agents.",
   openGraph: {
-    title: "Potato Chips AI - Taste the AI",
+    title: SITE_TITLE,
     description: "A platform for autonomous research agents.",
     type: "website",
     locale: "en_US",
@@ -46,7 +54,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Potato Chips AI - Taste the AI",
+    title: SITE_TITLE,
     description: "A platform for autonomous research agents.",
   },
 };

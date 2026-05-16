@@ -1,8 +1,6 @@
 import Link from "next/link";
 import { BrandLogo } from "./brand-logo";
 
-const FOOTER_SOCIAL_ENABLED = false;
-
 export function Footer() {
   return (
     <footer className="bg-background">
@@ -18,7 +16,7 @@ export function Footer() {
                 />
               </Link>
             </div>
-            <div className="grid gap-10 sm:grid-cols-2">
+            <div className="grid gap-10 sm:grid-cols-3">
               <div>
                 <p className="mb-5 text-[11px] font-semibold uppercase tracking-[0.24em] text-muted">
                   Actions
@@ -32,21 +30,33 @@ export function Footer() {
                   </Link>
                 </div>
               </div>
-              {FOOTER_SOCIAL_ENABLED ? (
-                <div>
-                  <p className="mb-5 text-[11px] font-semibold uppercase tracking-[0.24em] text-muted">
-                    Social
-                  </p>
-                  <div className="flex flex-col items-start gap-4 text-sm">
-                    <Link
-                      href="https://discord.gg/cz3Uq2Q2C"
-                      className="marketing-nav-link"
-                    >
-                      Join Discord
-                    </Link>
-                  </div>
+
+              <div>
+                <p className="mb-5 text-[11px] font-semibold uppercase tracking-[0.24em] text-muted">
+                  Social
+                </p>
+                <div className="flex flex-col items-start gap-4 text-sm">
+                  <Link
+                    href="https://www.instagram.com/potatochips.ai/"
+                    className="marketing-nav-link"
+                  >
+                    Instagram
+                  </Link>
+                  <Link
+                    href="https://www.tiktok.com/@potatochips.ai"
+                    className="marketing-nav-link"
+                  >
+                    TikTok
+                  </Link>
+                  <Link
+                    href="https://www.linkedin.com/company/potatochips-ai/"
+                    className="marketing-nav-link"
+                  >
+                    Linkedin
+                  </Link>
                 </div>
-              ) : null}
+              </div>
+
               <div>
                 <p className="mb-5 text-[11px] font-semibold uppercase tracking-[0.24em] text-muted">
                   Company

@@ -1,3 +1,8 @@
+import Image, { type StaticImageData } from "next/image";
+
+import logoTextBlack from "../../assets/logos/logo_text_black.png";
+import logoTextWhite from "../../assets/logos/logo_text_white.png";
+
 type BrandLogoProps = {
   variant: "adaptive" | "black" | "white";
   alt?: string;
@@ -8,22 +13,27 @@ type BrandLogoProps = {
 
 const BRAND_NAME = "Potato Chips AI";
 
-function BrandWordmark({
+function BrandWordmarkImage({
   alt,
   className,
-  toneClass,
+  priority,
+  sizes,
+  src,
 }: {
   alt: string;
   className?: string;
-  toneClass: string;
+  priority: boolean;
+  sizes: string;
+  src: StaticImageData;
 }) {
   return (
-    <span
-      aria-label={alt}
-      className={`inline-flex items-baseline whitespace-nowrap font-google-sans text-[clamp(1.35rem,4.7vw,2rem)] font-semibold leading-none tracking-normal ${toneClass} ${className ?? ""}`}
-    >
-      {BRAND_NAME}
-    </span>
+    <Image
+      alt={alt}
+      className={`block h-auto ${className ?? ""}`}
+      preload={priority}
+      sizes={sizes}
+      src={src}
+    />
   );
 }
 
@@ -34,31 +44,34 @@ export function BrandLogo({
   priority = false,
   sizes = "(max-width: 768px) 176px, 240px",
 }: BrandLogoProps) {
-  void priority;
-  void sizes;
-
   if (variant === "adaptive") {
     return (
       <>
-        <BrandWordmark
+        <BrandWordmarkImage
           alt={alt}
           className={`${className ?? ""} dark:hidden`}
-          toneClass="text-black"
+          priority={priority}
+          sizes={sizes}
+          src={logoTextBlack}
         />
-        <BrandWordmark
+        <BrandWordmarkImage
           alt={alt}
           className={`${className ?? ""} hidden dark:block`}
-          toneClass="text-white"
+          priority={priority}
+          sizes={sizes}
+          src={logoTextWhite}
         />
       </>
     );
   }
 
   return (
-    <BrandWordmark
+    <BrandWordmarkImage
       alt={alt}
       className={className}
-      toneClass={variant === "white" ? "text-white" : "text-black"}
+      priority={priority}
+      sizes={sizes}
+      src={variant === "white" ? logoTextWhite : logoTextBlack}
     />
   );
 }
