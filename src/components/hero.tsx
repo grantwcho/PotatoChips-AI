@@ -4,7 +4,6 @@ import nycImage from "../../assets/images/nyc.png";
 import { HeroCopyReveal } from "./hero-copy-reveal";
 import { MarketDebateShowcase } from "./market-debate-showcase";
 import { OrthogonalitySectionFrame } from "./orthogonality-section-frame";
-import { RecipeChatTranscript } from "./recipe-chat-transcript";
 import { ScrollExpandingCard } from "./scroll-expanding-card";
 import { STOCK_COVERAGE_ENABLED } from "@/lib/stocks/coverage-data";
 
@@ -54,20 +53,6 @@ function UniqueValueSection() {
   );
 }
 
-function OrthogonalitySection() {
-  return (
-    <section className="marketing-scroll-card-stage marketing-scroll-card-stage--chat relative z-10 pt-12 sm:pt-14 lg:pt-16">
-      <ScrollExpandingCard className="marketing-orthogonality-section marketing-home-light-section marketing-panel-light text-black">
-        <div className="marketing-container">
-          <OrthogonalitySectionFrame className="marketing-orthogonality-panel--chat">
-            <RecipeChatTranscript />
-          </OrthogonalitySectionFrame>
-        </div>
-      </ScrollExpandingCard>
-    </section>
-  );
-}
-
 export function Hero() {
   return (
     <>
@@ -95,7 +80,6 @@ export function Hero() {
         </section>
       </div>
 
-      <OrthogonalitySection />
       <UniqueValueSection />
 
       {STOCK_COVERAGE_ENABLED ? <MarketDebateShowcase /> : null}

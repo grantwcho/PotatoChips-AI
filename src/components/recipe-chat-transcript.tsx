@@ -1016,7 +1016,13 @@ function GeminiRecipeResponse() {
   );
 }
 
-export function RecipeChatTranscript() {
+type RecipeChatTranscriptProps = {
+  showTitle?: boolean;
+};
+
+export function RecipeChatTranscript({
+  showTitle = true,
+}: RecipeChatTranscriptProps) {
   const [selectedModel] = useState<RecipeModel>("claude");
   const [hasEnteredViewport, setHasEnteredViewport] = useState(false);
   const [revealedModels, setRevealedModels] = useState<RecipeModel[]>([]);
@@ -1157,9 +1163,11 @@ export function RecipeChatTranscript() {
       aria-label={`${selectedModelLabel} potato chips recipe conversation`}
       ref={transcriptRef}
     >
-      <h2 className="mb-[clamp(1.75rem,3vw,2.5rem)] text-center font-sans text-[clamp(2.2rem,4vw,4.35rem)] font-light leading-[1.02] tracking-[-0.04em] text-black">
-        Our Heartwarming Story.
-      </h2>
+      {showTitle ? (
+        <h2 className="mb-[clamp(1.75rem,3vw,2.5rem)] text-center font-sans text-[clamp(2.2rem,4vw,4.35rem)] font-light leading-[1.02] tracking-[-0.04em] text-black">
+          Our Heartwarming Story.
+        </h2>
+      ) : null}
 
       <div className="recipe-chat-prompt-row">
         <p

@@ -21,6 +21,9 @@ export function NavigationFallback() {
             </Link>
 
             <div className="hidden items-center justify-end gap-6 text-sm md:flex">
+              <Link href="/our-story" className="marketing-nav-link">
+                Our Story
+              </Link>
               <Link href="/preorder" className="marketing-nav-link">
                 Pre-order
               </Link>

@@ -15,6 +15,7 @@ export function MarketingNavShell() {
   const mobileMenuMutedClass = "text-white/[0.54]";
   const menuButtonToneClass = "text-white";
   const navItems = [
+    { href: "/our-story", label: "Our Story" },
     { href: "/preorder", label: "Pre-order" },
     { href: "/contact", label: "Contact Us" },
   ];
@@ -163,12 +164,11 @@ export function MarketingNavShell() {
               </Link>
 
               <div className="hidden items-center justify-end gap-6 text-sm md:flex">
-                <Link href="/preorder" className="marketing-nav-link">
-                  Pre-order
-                </Link>
-                <Link href="/contact" className="marketing-nav-link">
-                  Contact Us
-                </Link>
+                {navItems.map((item) => (
+                  <Link key={item.href} href={item.href} className="marketing-nav-link">
+                    {item.label}
+                  </Link>
+                ))}
               </div>
 
               {menuButton}

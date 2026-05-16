@@ -62,6 +62,9 @@ export function Footer() {
                   Company
                 </p>
                 <div className="flex flex-col items-start gap-4 text-sm">
+                  <Link href="/our-story" className="marketing-nav-link">
+                    Our Story
+                  </Link>
                   <Link href="/privacy-policy" className="marketing-nav-link">
                     Privacy Policy
                   </Link>

@@ -905,6 +905,38 @@ h1, h2, h3, h4, h5, h6 {
   color: #ffaf00;
 }
 
+.marketing-site .marketing-story-page {
+  --recipe-chat-section-bg: #f9f9f7;
+  min-height: clamp(48rem, 78vh, 62rem);
+  padding: clamp(8.5rem, 12vw, 12rem) 0 clamp(5.5rem, 8vw, 8rem);
+  background-color: var(--recipe-chat-section-bg);
+  color: #000000;
+  transition: background-color 260ms ease;
+}
+
+.marketing-site .marketing-story-page:has(.recipe-chat-transcript--gpt) {
+  --recipe-chat-section-bg: #fcfcfc;
+}
+
+.marketing-site .marketing-story-page:has(.recipe-chat-transcript--claude) {
+  --recipe-chat-section-bg: #f9f9f7;
+}
+
+.marketing-site .marketing-story-page:has(.recipe-chat-transcript--gemini) {
+  --recipe-chat-section-bg: #ffffff;
+}
+
+.marketing-site .marketing-story-heading {
+  margin: 0 auto clamp(1.75rem, 3vw, 2.5rem);
+  color: #000000;
+  font-family: var(--font-display), var(--font-sans), system-ui, sans-serif;
+  font-size: clamp(2.2rem, 4vw, 4.35rem);
+  font-weight: 300;
+  line-height: 1.02;
+  letter-spacing: 0;
+  text-align: center;
+}
+
 .marketing-site .marketing-scroll-card-stage {
   background: #000000 !important;
   overflow: clip;
