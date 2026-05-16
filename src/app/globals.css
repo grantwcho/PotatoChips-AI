@@ -229,102 +229,47 @@ h1, h2, h3, h4, h5, h6 {
   justify-content: center;
 }
 
-.taiwan-image-frame {
+.nyc-image-frame {
   position: relative;
-  width: min(36rem, 82vw);
+  width: min(48rem, 88vw);
   margin-inline: auto;
-  isolation: isolate;
 }
 
-.taiwan-draw-layer {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  display: block;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-  pointer-events: none;
-}
-
-.taiwan-draw-layer__path {
-  opacity: 0;
-  stroke: #ffffff;
-  stroke-width: 6;
-  stroke-dasharray: 1400;
-  stroke-dashoffset: 1400;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.58));
-}
-
-.marketing-site
-  .marketing-home-light-section
-  .taiwan-draw-layer__path {
-  stroke: #000000;
-  filter: drop-shadow(0 0 12px rgba(0, 0, 0, 0.18));
-}
-
-.taiwan-image {
+.nyc-outline-image {
   display: block;
   width: 100%;
   height: auto;
   opacity: 0;
-  filter: drop-shadow(0 0 28px rgba(255, 255, 255, 0.22));
-  transform: scale(0.985);
-}
-
-.marketing-site .marketing-home-light-section .taiwan-image {
-  filter: invert(1) drop-shadow(0 0 24px rgba(0, 0, 0, 0.1));
+  clip-path: inset(0 100% 0 0);
+  filter: contrast(220%);
+  mix-blend-mode: darken;
+  transform: translateZ(0);
+  pointer-events: none;
 }
 
 .marketing-site
   .marketing-orthogonality-panel.is-visible
-  .taiwan-draw-layer__path {
-  animation:
-    taiwan-outline-draw 1.85s 360ms cubic-bezier(0.2, 0.82, 0.22, 1) forwards,
-    taiwan-outline-fade 420ms 2.32s ease-out forwards;
+  .nyc-outline-image {
+  animation: nyc-outline-reveal 1.95s 320ms cubic-bezier(0.2, 0.82, 0.22, 1) forwards;
 }
 
-.marketing-site .marketing-orthogonality-panel.is-visible .taiwan-image {
-  animation: taiwan-image-appear 620ms 1.78s ease-out forwards;
-}
-
-@keyframes taiwan-outline-draw {
+@keyframes nyc-outline-reveal {
   0% {
     opacity: 1;
-    stroke-dashoffset: 1400;
+    clip-path: inset(0 100% 0 0);
   }
 
   100% {
     opacity: 1;
-    stroke-dashoffset: 0;
-  }
-}
-
-@keyframes taiwan-outline-fade {
-  to {
-    opacity: 0;
-  }
-}
-
-@keyframes taiwan-image-appear {
-  to {
-    opacity: 1;
-    transform: scale(1);
+    clip-path: inset(0 0 0 0);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .taiwan-draw-layer__path {
-    animation: none !important;
-    opacity: 0;
-  }
-
-  .taiwan-image {
+  .nyc-outline-image {
     animation: none !important;
     opacity: 1;
-    transform: none;
+    clip-path: none;
   }
 }
 
@@ -969,7 +914,7 @@ h1, h2, h3, h4, h5, h6 {
   background: #000000 !important;
 }
 
-.marketing-site .marketing-scroll-card-stage--taiwan {
+.marketing-site .marketing-scroll-card-stage--usa {
   background: #f9f9f7 !important;
   z-index: 20;
   margin-top: clamp(-3.5rem, -4vw, -2rem);
@@ -1004,22 +949,22 @@ h1, h2, h3, h4, h5, h6 {
   color: #000000;
 }
 
-.marketing-site .marketing-orthogonality-section.marketing-home-taiwan-section,
-.marketing-site .marketing-home-taiwan-section .marketing-orthogonality-panel,
-.marketing-site .marketing-home-taiwan-section .marketing-orthogonality-cell {
+.marketing-site .marketing-orthogonality-section.marketing-home-usa-section,
+.marketing-site .marketing-home-usa-section .marketing-orthogonality-panel,
+.marketing-site .marketing-home-usa-section .marketing-orthogonality-cell {
   background-color: #ae9179;
 }
 
-.marketing-site .marketing-home-taiwan-section .marketing-container,
-.marketing-site .marketing-home-taiwan-section .marketing-orthogonality-panel,
-.marketing-site .marketing-home-taiwan-section .marketing-orthogonality-cell,
-.marketing-site .marketing-home-taiwan-section .marketing-orthogonality-copy-inner,
-.marketing-site .marketing-home-taiwan-section .taiwan-image-frame {
+.marketing-site .marketing-home-usa-section .marketing-container,
+.marketing-site .marketing-home-usa-section .marketing-orthogonality-panel,
+.marketing-site .marketing-home-usa-section .marketing-orthogonality-cell,
+.marketing-site .marketing-home-usa-section .marketing-orthogonality-copy-inner,
+.marketing-site .marketing-home-usa-section .nyc-image-frame {
   margin-left: auto;
   margin-right: auto;
 }
 
-.marketing-site .marketing-home-taiwan-section .marketing-orthogonality-cell {
+.marketing-site .marketing-home-usa-section .marketing-orthogonality-cell {
   align-items: center;
   text-align: center;
 }
@@ -1114,8 +1059,8 @@ h1, h2, h3, h4, h5, h6 {
   animation: marketing-orthogonality-line-x 980ms 260ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
-.marketing-site .marketing-home-taiwan-section .marketing-orthogonality-panel::before,
-.marketing-site .marketing-home-taiwan-section .marketing-orthogonality-panel::after {
+.marketing-site .marketing-home-usa-section .marketing-orthogonality-panel::before,
+.marketing-site .marketing-home-usa-section .marketing-orthogonality-panel::after {
   display: none;
 }
 
