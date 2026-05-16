@@ -915,9 +915,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .marketing-site .marketing-scroll-card-stage--usa {
-  background: #f9f9f7 !important;
+  background: #000000 !important;
   z-index: 20;
-  margin-top: clamp(-3.5rem, -4vw, -2rem);
+  margin-top: 0;
   padding-top: 0 !important;
 }
 
