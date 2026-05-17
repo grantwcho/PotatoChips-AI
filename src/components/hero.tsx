@@ -37,8 +37,8 @@ function UniqueValueSection() {
                   Made in the USA
                 </h2>
                 <p className="mx-auto mt-5 max-w-[50rem] font-display text-[clamp(1.15rem,1.45vw,1.55rem)] font-light not-italic leading-[1.32] tracking-[0] text-black/72">
-                  All of our chips are produced in the United States of America
-                  in accordance to the CHIPS and Science Act of 2022.
+                  All of our potato chips are produced in the United States of
+                  America in accordance to the CHIPS and Science Act of 2022.
                 </p>
               </div>
 
